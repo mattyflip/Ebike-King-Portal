@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { EBIKE_MODELS, EbikeModel } from '../models';
 
 type DiagnosticContext = 
-  | { type: 'specific'; modelName: string }
+  | { type: 'specific'; modelName: string; specs?: EbikeModel['specs'] }
   | { type: 'custom'; voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string };
 
 interface ContextSetupProps {
@@ -11,6 +12,7 @@ interface ContextSetupProps {
 const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
   const [mode, setMode] = useState<'specific' | 'custom'>('specific');
   const [modelName, setModelName] = useState('');
+  const [selectedLibraryModel, setSelectedLibraryModel] = useState<EbikeModel | null>(null);
   
   // Custom build states
   const [voltage, setVoltage] = useState('48V');
@@ -19,10 +21,25 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
   const [motorWattage, setMotorWattage] = useState('');
   const [displayModel, setDisplayModel] = useState('');
 
+  const handleLibrarySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const model = EBIKE_MODELS.find(m => m.id === e.target.value);
+    if (model) {
+      setSelectedLibraryModel(model);
+      setModelName(model.name);
+    } else {
+      setSelectedLibraryModel(null);
+      setModelName('');
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === 'specific') {
-      onComplete({ type: 'specific', modelName });
+      onComplete({ 
+        type: 'specific', 
+        modelName: modelName,
+        specs: selectedLibraryModel?.specs 
+      });
     } else {
       onComplete({ 
         type: 'custom', 
@@ -42,28 +59,44 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
           className={mode === 'specific' ? 'active' : ''} 
           onClick={() => setMode('specific')}
         >
-          Specific Model
+          Model Library
         </button>
         <button 
           className={mode === 'custom' ? 'active' : ''} 
           onClick={() => setMode('custom')}
         >
-          Custom/Generic Build
+          Custom Build
         </button>
       </div>
 
       <form onSubmit={handleSubmit}>
         {mode === 'specific' ? (
           <div className="form-group">
+            <label>Select Shop Model</label>
+            <select onChange={handleLibrarySelect} style={{ marginBottom: '1rem' }}>
+              <option value="">-- Choose a standard model --</option>
+              {EBIKE_MODELS.map(m => (
+                <option key={m.id} value={m.id}>{m.name}</option>
+              ))}
+              <option value="other">Other / Manual Entry</option>
+            </select>
+
             <label>Bike Model Name</label>
             <input 
               type="text" 
               placeholder="e.g. Onyx RCR, Sur-Ron X, Talaria Sting" 
               value={modelName} 
-              onChange={(e) => setModelName(e.target.value)}
+              onChange={(e) => {
+                setModelName(e.target.value);
+                if (selectedLibraryModel?.name !== e.target.value) setSelectedLibraryModel(null);
+              }}
               required
             />
-            <p className="hint">Master Tech will provide mechanical specs for known models.</p>
+            {selectedLibraryModel && (
+              <div className="hint" style={{ color: 'var(--neon-green)', marginTop: '10px' }}>
+                ✓ Verified Tech Specs Loaded: {selectedLibraryModel.specs.voltage} | {selectedLibraryModel.specs.controller}
+              </div>
+            )}
           </div>
         ) : (
           <>
@@ -110,7 +143,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
             </div>
           </>
         )}
-        <button type="submit" className="start-btn">Start Diagnostics</button>
+        <button type="submit" className="start-btn">Initialize Diagnostic Path</button>
       </form>
     </div>
   );

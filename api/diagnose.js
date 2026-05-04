@@ -29,27 +29,47 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    const { message, context, history } = req.body;
+    const { message, image, context, history } = req.body;
 
     try {
         const chat = model.startChat({
             history: history || [],
         });
 
-        // Prepend context if provided for the first message
-        let prompt = message;
+        // Prepare message parts
+        const parts = [];
+        
+        // Handle context for the first message
+        let textContent = message;
         if (context && (!history || history.length === 0)) {
             if (context.type === 'specific') {
-                prompt = `The mechanic is working on a specific model: ${context.modelName}. 
-                1. Please provide the key mechanical and electrical specifications for this bike (e.g., motor type, battery specs, common controller).
-                2. Then, address the following issue: ${message}`;
+                const specs = context.specs ? 
+                    ` (Specs: ${context.specs.voltage}, Controller: ${context.specs.controller}, Motor: ${context.specs.motorType}, Display: ${context.specs.displayModel})` : 
+                    '';
+                textContent = `The mechanic is working on a specific model: ${context.modelName}${specs}. 
+                1. Please provide the key mechanical and electrical specifications for this bike (or confirm the provided ones).
+                2. Then, address the following issue: ${message || 'Check the attached image for details.'}`;
             } else {
-                prompt = `Context: Generic Build. Voltage: ${context.voltage}, Controller: ${context.controller || 'Unknown'}, Motor: ${context.motorType || 'Unknown'}, Display: ${context.displayModel || 'None'}. 
-                Issue: ${message}`;
+                textContent = `Context: Generic Build. Voltage: ${context.voltage}, Controller: ${context.controller || 'Unknown'}, Motor: ${context.motorType || 'Unknown'}, Display: ${context.displayModel || 'None'}. 
+                Issue: ${message || 'Check the attached image for details.'}`;
             }
         }
+        
+        parts.push({ text: textContent });
 
-        const result = await chat.sendMessage(prompt);
+        // Add image part if provided
+        if (image) {
+            const [header, data] = image.split(',');
+            const mimeType = header.split(':')[1].split(';')[0];
+            parts.push({
+                inlineData: {
+                    data: data,
+                    mimeType: mimeType
+                }
+            });
+        }
+
+        const result = await chat.sendMessage(parts);
         const response = await result.response;
         res.status(200).json({ text: response.text() });
     } catch (error) {
