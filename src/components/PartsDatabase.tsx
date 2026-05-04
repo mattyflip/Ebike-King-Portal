@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PARTS_DATABASE, PartReference } from '../parts';
+import { PARTS_DATABASE } from '../parts';
 
 interface PartsDatabaseProps {
   isOpen: boolean;

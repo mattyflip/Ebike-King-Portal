@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { EBIKE_MODELS, EbikeModel } from '../models';
+import { EBIKE_MODELS } from '../models';
+import type { EbikeModel } from '../models';
 
 type DiagnosticContext = 
   | { type: 'specific'; modelName: string; specs?: EbikeModel['specs'] }
