@@ -162,6 +162,64 @@
   font-weight: bold;
 }
 
+.key-status {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--neon-green);
+  border-radius: 50%;
+  box-shadow: 0 0 5px var(--neon-green);
+}
+
+.key-config {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-input);
+  border: 1px dashed var(--border-industrial);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.key-config label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.key-config input {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+.key-config button {
+  background: var(--neon-cyan);
+  color: var(--bg-dark);
+  border: none;
+  padding: 5px 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.direct-badge {
+  font-size: 0.6rem;
+  color: var(--neon-green);
+  border: 1px solid var(--neon-green);
+  padding: 2px 5px;
+  border-radius: 2px;
+  margin-left: 10px;
+}
+
 /* Container Polish */
 .setup-container, .chat-container {
   background: var(--bg-panel);

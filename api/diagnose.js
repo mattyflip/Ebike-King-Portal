@@ -20,7 +20,7 @@ Tone: Direct, technical, and "no-nonsense." Avoid introductory fluff. Assume the
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash-latest",
+    model: "gemini-1.5-flash",
     systemInstruction: SYSTEM_PROMPT
 });
 
@@ -32,7 +32,9 @@ export default async function handler(req, res) {
     const { message, image, context, history } = req.body;
 
     try {
-        const chat = model.startChat({
+        let activeModel = model;
+        
+        const chat = activeModel.startChat({
             history: history || [],
         });
 
