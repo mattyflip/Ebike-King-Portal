@@ -25,10 +25,16 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
   const [displayModel, setDisplayModel] = useState('');
 
   useEffect(() => {
-    fetch('/api/bikes')
-      .then(res => res.json())
-      .then(data => setSavedBikes(Array.isArray(data) ? data : []))
-      .catch(err => console.error('Error fetching bikes:', err));
+    // Load from localStorage instead of API
+    const stored = localStorage.getItem('mechanic_library');
+    if (stored) {
+      try {
+        setSavedBikes(JSON.parse(stored));
+      } catch (err) {
+        console.error('Error parsing saved bikes:', err);
+        setSavedBikes([]);
+      }
+    }
   }, []);
 
   const handleLibrarySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -42,23 +48,23 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
     }
   };
 
-  const handleSaveBike = async () => {
+  const handleSaveBike = () => {
     if (!modelName) return alert('Please enter a model name first.');
     setIsSaving(true);
     try {
-      const bikeData = {
+      const newBike = {
+        id: Date.now().toString(),
         name: modelName,
         specs: { voltage, controller, motorType, motorWattage, displayModel }
       };
-      const res = await fetch('/api/bikes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bikeData)
-      });
-      const saved = await res.json();
-      setSavedBikes([...savedBikes, saved]);
-      alert('Bike specifications saved successfully!');
+      
+      const updatedBikes = [...savedBikes, newBike];
+      localStorage.setItem('mechanic_library', JSON.stringify(updatedBikes));
+      setSavedBikes(updatedBikes);
+      
+      alert('Bike specifications saved successfully to local library!');
     } catch (err) {
+      console.error('Failed to save bike:', err);
       alert('Failed to save bike.');
     } finally {
       setIsSaving(false);
@@ -134,7 +140,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
               required
             />
             {selectedLibraryModel && (
-              <div className="hint" style={{ color: 'var(--neon-green)', marginTop: '10px' }}>
+              <div className="hint" style={{ color: 'var(--neon-green)', marginTop: '10px' }}>   
                 Tech Specs Loaded: {selectedLibraryModel.specs.voltage} | {selectedLibraryModel.specs.controller}
               </div>
             )}
