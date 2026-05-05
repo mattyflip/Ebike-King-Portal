@@ -107,25 +107,46 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
         });
       }
 
-      // REST API call directly to Google
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [...historyParts, { role: 'user', parts: currentParts }]
-          })
+      // Try different model combinations for maximum reliability
+      const modelsToTry = [
+        'gemini-1.5-flash',
+        'gemini-1.5-flash-latest',
+        'gemini-pro'
+      ];
+
+      let lastError = null;
+      let modelText = '';
+
+      for (const modelId of modelsToTry) {
+        try {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1/models/${modelId}:generateContent?key=${apiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [...historyParts, { role: 'user', parts: currentParts }]
+              })
+            }
+          );
+
+          const data = await response.json();
+
+          if (!data.error && data.candidates && data.candidates[0].content.parts[0].text) {
+            modelText = data.candidates[0].content.parts[0].text;
+            break; // Success!
+          } else {
+            lastError = data.error?.message || 'Incomplete response';
+          }
+        } catch (e: any) {
+          lastError = e.message;
         }
-      );
-
-      const data = await response.json();
-
-      if (data.error) {
-        throw new Error(data.error.message);
       }
 
-      const modelText = data.candidates[0].content.parts[0].text;
+      if (!modelText) {
+        throw new Error(lastError || 'All model connection attempts failed.');
+      }
+
       const modelMessage: Message = { role: 'model', text: modelText };
       setMessages((prev) => [...prev, modelMessage]);
     } catch (error: any) {
