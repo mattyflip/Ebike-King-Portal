@@ -11,7 +11,7 @@ const ErrorCodeDatabase: React.FC<ErrorCodeDatabaseProps> = ({ isOpen, onClose }
 
   if (!isOpen) return null;
 
-  const filteredCodes = COMMON_ERROR_CODES.filter(c => 
+  const filteredCodes = COMMON_ERROR_CODES.filter(c =>
     c.code.toLowerCase().includes(search.toLowerCase()) ||
     c.meaning.toLowerCase().includes(search.toLowerCase()) ||
     c.brands.some(b => b.toLowerCase().includes(search.toLowerCase()))
@@ -22,13 +22,13 @@ const ErrorCodeDatabase: React.FC<ErrorCodeDatabaseProps> = ({ isOpen, onClose }
       <div className="parts-drawer" onClick={e => e.stopPropagation()}>
         <div className="parts-header">
           <h2>Error Code Database</h2>
-          <button className="close-drawer" onClick={onClose}>×</button>
+          <button className="close-drawer" onClick={onClose}>X</button>
         </div>
 
         <div className="parts-search">
-          <input 
-            type="text" 
-            placeholder="Search code (e.g. E007) or brand (e.g. Macfox)..." 
+          <input
+            type="text"
+            placeholder="Search code (e.g. E007) or brand (e.g. Macfox)..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             autoFocus

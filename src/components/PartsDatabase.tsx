@@ -9,7 +9,7 @@ interface PartsDatabaseProps {
 const PartsDatabase: React.FC<PartsDatabaseProps> = ({ isOpen, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredParts = PARTS_DATABASE.filter(part => 
+  const filteredParts = PARTS_DATABASE.filter(part =>
     part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     part.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -21,13 +21,13 @@ const PartsDatabase: React.FC<PartsDatabaseProps> = ({ isOpen, onClose }) => {
       <div className="parts-drawer" onClick={e => e.stopPropagation()}>
         <div className="parts-header">
           <h3>Component Reference</h3>
-          <button onClick={onClose} className="close-drawer">×</button>
+          <button onClick={onClose} className="close-drawer">X</button>
         </div>
-        
+
         <div className="parts-search">
-          <input 
-            type="text" 
-            placeholder="Search pinouts (e.g. Hall, BMS)..." 
+          <input
+            type="text"
+            placeholder="Search pinouts (e.g. Hall, BMS)..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

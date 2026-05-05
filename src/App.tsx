@@ -16,15 +16,14 @@ function App() {
 
   return (
     <div className="app-wrapper">
-      {/* Global Actions Bar - Always at the top */}
       <div style={{ display: 'flex', gap: '8px', padding: '12px', background: 'rgba(0,0,0,0.5)', borderBottom: '1px solid var(--border-industrial)', position: 'sticky', top: 0, zIndex: 100 }}>
-        <button 
-          onClick={() => setIsCodesOpen(true)} 
+        <button
+          onClick={() => setIsCodesOpen(true)}
           style={{ flex: 1, padding: '10px', background: 'var(--neon-red)', color: '#000', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: '900', fontSize: '0.75rem', cursor: 'pointer' }}
         >
           ERROR CODES
         </button>
-        <button 
+        <button
           onClick={() => setIsPartsOpen(true)}
           style={{ flex: 1, padding: '10px', background: 'var(--neon-cyan)', color: '#000', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: '900', fontSize: '0.75rem', cursor: 'pointer' }}
         >
