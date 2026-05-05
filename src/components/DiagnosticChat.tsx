@@ -62,11 +62,14 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
       const data = await response.json();
       
-      if (data.models) {
+      if (data.models && Array.isArray(data.models)) {
         // Find the first model that supports generateContent
+        // We look for 'gemini-1.5-flash' specifically first, then fallback
         const suitable = data.models.find((m: any) => 
           m.supportedGenerationMethods.includes('generateContent') && 
-          !m.name.includes('vision') // Prefer newer multimodal models
+          (m.name.includes('gemini-1.5-flash') || m.name.includes('gemini-2.0-flash'))
+        ) || data.models.find((m: any) => 
+          m.supportedGenerationMethods.includes('generateContent')
         );
         
         if (suitable) {
@@ -135,7 +138,7 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
         });
       }
 
-      // 4. REST API call
+      // 4. REST API call - try v1beta first
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/${modelToUse}:generateContent?key=${apiKey}`,
         {
@@ -147,7 +150,22 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
         }
       );
 
-      const data = await response.json();
+      let data = await response.json();
+
+      // If v1beta fails with 404, try v1
+      if (data.error && data.error.code === 404) {
+          const v1Response = await fetch(
+            `https://generativelanguage.googleapis.com/v1/${modelToUse}:generateContent?key=${apiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [...historyParts, { role: 'user', parts: currentParts }]
+              })
+            }
+          );
+          data = await v1Response.json();
+      }
 
       if (data.error) throw new Error(data.error.message);
 
