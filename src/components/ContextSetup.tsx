@@ -179,6 +179,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
                 value={motorWattage}
                 onChange={(e) => {
                   setMotorWattage(e.target.value);
+                  setMotorType(e.target.value);
                 }}
               />
             </div>
