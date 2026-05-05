@@ -39,6 +39,7 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
   const [input, setInput] = useState('');
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [activeModel, setActiveModel] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,6 +55,31 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // AUTO-DISCOVERY: Find a model that works for this specific API key
+  const findWorkingModel = async () => {
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+      const data = await response.json();
+      
+      if (data.models) {
+        // Find the first model that supports generateContent
+        const suitable = data.models.find((m: any) => 
+          m.supportedGenerationMethods.includes('generateContent') && 
+          !m.name.includes('vision') // Prefer newer multimodal models
+        );
+        
+        if (suitable) {
+          console.log("Auto-discovered model:", suitable.name);
+          return suitable.name;
+        }
+      }
+      return 'models/gemini-pro'; // Last resort
+    } catch (e) {
+      console.error("Discovery failed", e);
+      return 'models/gemini-pro';
+    }
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -77,15 +103,21 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
     setLoading(true);
 
     try {
-      // Build History for REST API
+      // 1. Resolve which model to use
+      let modelToUse = activeModel;
+      if (!modelToUse) {
+        modelToUse = await findWorkingModel();
+        setActiveModel(modelToUse);
+      }
+
+      // 2. Build History for REST API
       const historyParts = messages.map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.text }]
       }));
 
-      // Current message parts
+      // 3. Current message parts
       const currentParts: any[] = [];
-      
       let textContent = input;
       if (messages.length === 0) {
         const contextStr = context.type === 'specific' 
@@ -93,60 +125,33 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
           : `Custom Build: ${context.voltage}, ${context.controller}, ${context.motorType}`;
         textContent = `[SYSTEM INSTRUCTION: ${SYSTEM_PROMPT}]\n\nContext: ${contextStr}\n\nIssue: ${input || 'Analyze the image.'}`;
       }
-      
       currentParts.push({ text: textContent });
 
       if (userMessage.image) {
         const [header, data] = userMessage.image.split(',');
         const mimeType = header.split(':')[1].split(';')[0];
         currentParts.push({
-          inlineData: {
-            data: data,
-            mimeType: mimeType
-          }
+          inlineData: { data, mimeType }
         });
       }
 
-      // Try different model combinations for maximum reliability
-      const modelsToTry = [
-        'gemini-1.5-flash',
-        'gemini-1.5-flash-latest',
-        'gemini-pro'
-      ];
-
-      let lastError = null;
-      let modelText = '';
-
-      for (const modelId of modelsToTry) {
-        try {
-          const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1/models/${modelId}:generateContent?key=${apiKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [...historyParts, { role: 'user', parts: currentParts }]
-              })
-            }
-          );
-
-          const data = await response.json();
-
-          if (!data.error && data.candidates && data.candidates[0].content.parts[0].text) {
-            modelText = data.candidates[0].content.parts[0].text;
-            break; // Success!
-          } else {
-            lastError = data.error?.message || 'Incomplete response';
-          }
-        } catch (e: any) {
-          lastError = e.message;
+      // 4. REST API call
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/${modelToUse}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [...historyParts, { role: 'user', parts: currentParts }]
+          })
         }
-      }
+      );
 
-      if (!modelText) {
-        throw new Error(lastError || 'All model connection attempts failed.');
-      }
+      const data = await response.json();
 
+      if (data.error) throw new Error(data.error.message);
+
+      const modelText = data.candidates[0].content.parts[0].text;
       const modelMessage: Message = { role: 'model', text: modelText };
       setMessages((prev) => [...prev, modelMessage]);
     } catch (error: any) {
@@ -164,7 +169,7 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
     <div className="chat-container">
       <div className="chat-header">
         <h3>{getHeader()}</h3>
-        <span className="direct-badge">REST API Active</span>
+        <span className="direct-badge">{activeModel ? activeModel.split('/')[1] : 'Discovering AI...'}</span>
       </div>
       <div className="messages-list">
         {messages.length === 0 && (
