@@ -6,7 +6,8 @@ import PartsDatabase from "./components/PartsDatabase";
 import ErrorCodeDatabase from "./components/ErrorCodeDatabase";
 import Login from "./components/Login";
 import { auth, db } from "./firebase";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import type { User } from "firebase/auth";
 import { onSnapshot, doc } from "firebase/firestore";
 
 type DiagnosticContext =
@@ -36,7 +37,7 @@ function App() {
   const [context, setContext] = useState<DiagnosticContext | null>(null);
   const [isPartsOpen, setIsPartsOpen] = useState(false);
   const [isCodesOpen, setIsCodesOpen] = useState(false);
-  const [dbConnected, setDbConnected] = useState(null);
+  const [dbConnected, setDbConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
