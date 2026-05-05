@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { EBIKE_MODELS } from '../models';
 import type { EbikeModel } from '../models';
+import { db } from '../firebase';
+import { collection, addDoc, onSnapshot, query } from 'firebase/firestore';
 
 type DiagnosticContext = 
   | { type: 'specific'; modelName: string; specs?: EbikeModel['specs'] }
@@ -25,16 +27,19 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
   const [displayModel, setDisplayModel] = useState('');
 
   useEffect(() => {
-    // Load from localStorage instead of API
-    const stored = localStorage.getItem('mechanic_library');
-    if (stored) {
-      try {
-        setSavedBikes(JSON.parse(stored));
-      } catch (err) {
-        console.error('Error parsing saved bikes:', err);
-        setSavedBikes([]);
-      }
-    }
+    // Real-time listener for Firestore "bikes" collection
+    const q = query(collection(db, "bikes"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const bikes: any[] = [];
+      querySnapshot.forEach((doc) => {
+        bikes.push({ id: doc.id, ...doc.data() });
+      });
+      setSavedBikes(bikes);
+    }, (error) => {
+      console.error("Error listening to bikes collection:", error);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleLibrarySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -48,21 +53,19 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
     }
   };
 
-  const handleSaveBike = () => {
+  const handleSaveBike = async () => {
     if (!modelName) return alert('Please enter a model name first.');
     setIsSaving(true);
     try {
-      const newBike = {
-        id: Date.now().toString(),
+      const bikeData = {
         name: modelName,
-        specs: { voltage, controller, motorType, motorWattage, displayModel }
+        specs: { voltage, controller, motorType, motorWattage, displayModel },
+        createdAt: new Date().toISOString()
       };
-      
-      const updatedBikes = [...savedBikes, newBike];
-      localStorage.setItem('mechanic_library', JSON.stringify(updatedBikes));
-      setSavedBikes(updatedBikes);
-      
-      alert('Bike specifications saved successfully to local library!');
+
+      await addDoc(collection(db, "bikes"), bikeData);
+
+      alert('Bike specifications saved successfully to cloud library!');
     } catch (err) {
       console.error('Failed to save bike:', err);
       alert('Failed to save bike.');
