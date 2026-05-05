@@ -16,27 +16,27 @@ function App() {
 
   return (
     <div className="app-wrapper">
-      <header className="main-header">
-        <div className="header-flex" style={{ flexDirection: 'column', gap: '15px' }}>
+      {/* Global Actions Bar - Always at the top */}
+      <div style={{ display: 'flex', gap: '8px', padding: '12px', background: 'rgba(0,0,0,0.5)', borderBottom: '1px solid var(--border-industrial)', position: 'sticky', top: 0, zIndex: 100 }}>
+        <button 
+          onClick={() => setIsCodesOpen(true)} 
+          style={{ flex: 1, padding: '10px', background: 'var(--neon-red)', color: '#000', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: '900', fontSize: '0.75rem', cursor: 'pointer' }}
+        >
+          ERROR CODES
+        </button>
+        <button 
+          onClick={() => setIsPartsOpen(true)}
+          style={{ flex: 1, padding: '10px', background: 'var(--neon-cyan)', color: '#000', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: '900', fontSize: '0.75rem', cursor: 'pointer' }}
+        >
+          PARTS DB
+        </button>
+      </div>
+
+      <header className="main-header" style={{ marginTop: '1rem' }}>
+        <div className="header-flex">
           <div>
             <h1>Ebike King NJ</h1>
-            <span className="subtitle">Master Tech Diagnostic Portal v2.3</span>
-          </div>
-          <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-            <button 
-              className="parts-toggle-btn" 
-              onClick={() => setIsCodesOpen(true)} 
-              style={{ flex: 1, borderColor: 'var(--neon-red)', color: 'var(--neon-red)', fontSize: '0.7rem' }}
-            >
-              ERR CODES
-            </button>
-            <button 
-              className="parts-toggle-btn" 
-              onClick={() => setIsPartsOpen(true)}
-              style={{ flex: 1, fontSize: '0.7rem' }}
-            >
-              PARTS DB
-            </button>
+            <span className="subtitle">Master Tech Diagnostic Portal v2.4</span>
           </div>
         </div>
       </header>
@@ -53,7 +53,7 @@ function App() {
       <ErrorCodeDatabase isOpen={isCodesOpen} onClose={() => setIsCodesOpen(false)} />
 
       {context && (
-        <button className="reset-btn" onClick={() => setContext(null)}>
+        <button className="reset-btn" onClick={() => setContext(null)} style={{ margin: '2rem auto', display: 'block' }}>
           New Diagnostic Session
         </button>
       )}
