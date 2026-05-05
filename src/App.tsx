@@ -17,17 +17,25 @@ function App() {
   return (
     <div className="app-wrapper">
       <header className="main-header">
-        <div className="header-flex">
+        <div className="header-flex" style={{ flexDirection: 'column', gap: '15px' }}>
           <div>
             <h1>Ebike King NJ</h1>
             <span className="subtitle">Master Tech Diagnostic Portal v2.3</span>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button className="parts-toggle-btn" onClick={() => setIsCodesOpen(true)} style={{ borderColor: 'var(--neon-red)', color: 'var(--neon-red)' }}>
-              ?? Error Codes
+          <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+            <button 
+              className="parts-toggle-btn" 
+              onClick={() => setIsCodesOpen(true)} 
+              style={{ flex: 1, borderColor: 'var(--neon-red)', color: 'var(--neon-red)', fontSize: '0.7rem' }}
+            >
+              ERR CODES
             </button>
-            <button className="parts-toggle-btn" onClick={() => setIsPartsOpen(true)}>
-              ?? Parts DB
+            <button 
+              className="parts-toggle-btn" 
+              onClick={() => setIsPartsOpen(true)}
+              style={{ flex: 1, fontSize: '0.7rem' }}
+            >
+              PARTS DB
             </button>
           </div>
         </div>
