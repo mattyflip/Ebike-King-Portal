@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface Message {
   role: 'user' | 'model';
@@ -43,13 +42,6 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize AI locally
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ 
-    model: "gemini-2.0-flash",
-    systemInstruction: SYSTEM_PROMPT
-  });
-
   const getHeader = () => {
     if (context.type === 'specific') return context.modelName;
     return `${context.voltage} | ${context.controller || 'Generic Controller'} | ${context.motorType || 'Generic Motor'}`;
@@ -85,37 +77,29 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
     setLoading(true);
 
     try {
-      const chat = model.startChat({
-        history: messages.map(m => ({ 
-          role: m.role === 'user' ? 'user' : 'model', 
-          parts: [{ text: m.text }] 
-        }))
-      });
+      // Build History for REST API
+      const historyParts = messages.map(m => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.text }]
+      }));
 
-      const parts: any[] = [];
+      // Current message parts
+      const currentParts: any[] = [];
       
-      // Prepend context for the first message
       let textContent = input;
       if (messages.length === 0) {
-        if (context.type === 'specific') {
-          const specs = context.specs ? 
-            ` (Specs: ${context.specs.voltage}, Controller: ${context.specs.controller}, Motor: ${context.specs.motorType}, Display: ${context.specs.displayModel})` : 
-            '';
-          textContent = `The mechanic is working on a specific model: ${context.modelName}${specs}. 
-          1. Please provide the key mechanical and electrical specifications for this bike (or confirm the provided ones).
-          2. Then, address the following issue: ${input || 'Check the attached image for details.'}`;
-        } else {
-          textContent = `Context: Generic Build. Voltage: ${context.voltage}, Controller: ${context.controller || 'Unknown'}, Motor: ${context.motorType || 'Unknown'}, Display: ${context.displayModel || 'None'}. 
-          Issue: ${input || 'Check the attached image for details.'}`;
-        }
+        const contextStr = context.type === 'specific' 
+          ? `Model: ${context.modelName}${context.specs ? ` (${context.specs.voltage}, ${context.specs.controller})` : ''}`
+          : `Custom Build: ${context.voltage}, ${context.controller}, ${context.motorType}`;
+        textContent = `[SYSTEM INSTRUCTION: ${SYSTEM_PROMPT}]\n\nContext: ${contextStr}\n\nIssue: ${input || 'Analyze the image.'}`;
       }
       
-      parts.push({ text: textContent });
+      currentParts.push({ text: textContent });
 
       if (userMessage.image) {
         const [header, data] = userMessage.image.split(',');
         const mimeType = header.split(':')[1].split(';')[0];
-        parts.push({
+        currentParts.push({
           inlineData: {
             data: data,
             mimeType: mimeType
@@ -123,15 +107,32 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
         });
       }
 
-      const result = await chat.sendMessage(parts);
-      const response = await result.response;
-      const modelMessage: Message = { role: 'model', text: response.text() };
+      // REST API call directly to Google
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [...historyParts, { role: 'user', parts: currentParts }]
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error.message);
+      }
+
+      const modelText = data.candidates[0].content.parts[0].text;
+      const modelMessage: Message = { role: 'model', text: modelText };
       setMessages((prev) => [...prev, modelMessage]);
     } catch (error: any) {
-      console.error('AI Error:', error);
+      console.error('REST API Error:', error);
       setMessages((prev) => [...prev, { 
         role: 'model', 
-        text: `**DIAGNOSTIC FAILURE:** ${error.message || 'The AI encountered a critical error. Check your API key and network connection.'}` 
+        text: `**DIAGNOSTIC FAILURE:** ${error.message || 'Check your API key and connection.'}` 
       }]);
     } finally {
       setLoading(false);
@@ -142,7 +143,7 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
     <div className="chat-container">
       <div className="chat-header">
         <h3>{getHeader()}</h3>
-        <span className="direct-badge">Direct Access Active</span>
+        <span className="direct-badge">REST API Active</span>
       </div>
       <div className="messages-list">
         {messages.length === 0 && (
