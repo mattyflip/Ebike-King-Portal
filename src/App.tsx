@@ -5,8 +5,9 @@ import DiagnosticChat from "./components/DiagnosticChat";
 import PartsDatabase from "./components/PartsDatabase";
 import ErrorCodeDatabase from "./components/ErrorCodeDatabase";
 import Login from "./components/Login";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { onSnapshot, doc } from "firebase/firestore";
 
 type DiagnosticContext =
   | {
@@ -35,6 +36,7 @@ function App() {
   const [context, setContext] = useState<DiagnosticContext | null>(null);
   const [isPartsOpen, setIsPartsOpen] = useState(false);
   const [isCodesOpen, setIsCodesOpen] = useState(false);
+  const [dbConnected, setDbConnected] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -43,6 +45,22 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = onSnapshot(
+        doc(db, "system", "status"),
+        () => setDbConnected(true),
+        (err) => {
+          console.error("Firestore connection error:", err);
+          setDbConnected(false);
+        }
+      );
+      return () => unsubscribe();
+    } else {
+      setDbConnected(null);
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -87,6 +105,18 @@ function App() {
           zIndex: 100,
         }}
       >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '10px', paddingLeft: '8px' }}>
+          <div style={{ 
+            width: '8px', 
+            height: '8px', 
+            borderRadius: '50%', 
+            background: dbConnected === true ? 'var(--neon-green)' : dbConnected === false ? 'var(--neon-red)' : 'var(--neon-amber)',
+            boxShadow: dbConnected === true ? '0 0 5px var(--neon-green)' : 'none'
+          }} />
+          <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+            {dbConnected === true ? "Cloud Live" : dbConnected === false ? "Cloud Error" : "Connecting..."}
+          </span>
+        </div>
         <button
           onClick={() => setIsCodesOpen(true)}
           style={{
@@ -140,7 +170,7 @@ function App() {
         <div className="header-flex">
           <div>
             <h1>Ebike King NJ</h1>
-            <span className="subtitle">Master Tech Diagnostic Portal v2.5</span>
+            <span className="subtitle">Master Tech Diagnostic Portal v2.6</span>
           </div>
           <div style={{ textAlign: "right", color: "var(--text-dim)", fontSize: "0.8rem" }}>
             Mechanic: {user.email}
