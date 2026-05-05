@@ -1,8 +1,10 @@
-self.addEventListener('install', (event) => {
+const CACHE_NAME = "ek-portal-v2.6";
+self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
-
-self.addEventListener('fetch', (event) => {
-  // A simple fetch handler is required for PWA installability
+self.addEventListener("activate", (event) => {
+  event.waitUntil(clients.claim());
+});
+self.addEventListener("fetch", (event) => {
   event.respondWith(fetch(event.request));
 });
