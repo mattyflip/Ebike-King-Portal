@@ -50,6 +50,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
       },
       (error) => {
         console.error("Error listening to bikes collection:", error);
+        alert("Real-time sync error: " + error.message);
       }
     );
 
@@ -91,9 +92,9 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
 
       alert("Bike specifications saved successfully to cloud library!");
       setPhoto(null);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to save bike:", err);
-      alert("Failed to save bike.");
+      alert("Failed to save bike: " + (err.message || "Unknown error"));
     } finally {
       setIsSaving(false);
     }
