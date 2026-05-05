@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import ContextSetup from "./components/ContextSetup";
 import DiagnosticChat from "./components/DiagnosticChat";
@@ -140,7 +140,7 @@ function App() {
         <div className="header-flex">
           <div>
             <h1>Ebike King NJ</h1>
-            <span className="subtitle">Master Tech Diagnostic Portal v2.4</span>
+            <span className="subtitle">Master Tech Diagnostic Portal v2.5</span>
           </div>
           <div style={{ textAlign: "right", color: "var(--text-dim)", fontSize: "0.8rem" }}>
             Mechanic: {user.email}
@@ -173,4 +173,5 @@ function App() {
 }
 
 export default App;
+
 
