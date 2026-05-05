@@ -1,3 +1,4 @@
+import bikesHandler from './api/bikes.js';
 import express from 'express';
 import handler from './api/diagnose.js';
 import dotenv from 'dotenv';
@@ -7,6 +8,7 @@ dotenv.config();
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 
+app.all('/api/bikes', async (req, res) => { try { await bikesHandler(req, res); } catch (e) { res.status(500).json({error: e.message}); } });
 app.post('/api/diagnose', async (req, res) => {
     try {
         await handler(req, res);
@@ -20,3 +22,4 @@ const PORT = 3001;
 app.listen(PORT, () => {
     console.log('API Server running at http://localhost:' + PORT);
 });
+
