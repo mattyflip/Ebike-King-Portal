@@ -3,12 +3,23 @@
   max-width: 1000px;
   min-height: 100vh;
   margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 100vh;
+  margin: 0 auto;
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
 }
 
 .main-header {
+  text-align: left;
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--neon-cyan);
+  padding: 1rem 1.5rem;
   text-align: left;
   margin-bottom: 3rem;
   border-left: 4px solid var(--neon-cyan);
@@ -229,6 +240,14 @@
 
 /* Container Polish */
 .setup-container, .chat-container {
+  height: 100vh;
+  border-radius: 0;
+  background: var(--bg-panel);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
   background: var(--bg-panel);
   border: 1px solid var(--border-industrial);
   border-radius: var(--radius-cozy);
@@ -248,6 +267,7 @@
 }
 
 .setup-container {
+  padding: 2rem 1.5rem;
   padding: 3rem;
   max-width: 600px;
   margin: 0 auto;
@@ -334,6 +354,8 @@ input:focus, select:focus {
 
 /* Chat Industrialization */
 .chat-container {
+  height: 100vh;
+  border-radius: 0;
   height: 75vh;
   display: flex;
   flex-direction: column;
@@ -519,4 +541,5 @@ input:focus, select:focus {
 .message-content strong {
   color: var(--neon-green);
 }
+
 
