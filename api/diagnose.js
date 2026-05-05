@@ -1,6 +1,16 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method Not Allowed' });
+    }
 
-const SYSTEM_PROMPT = `
+    const { messages, context, image } = req.body;
+    const apiKey = process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
+        return res.status(500).json({ error: 'OPENAI_API_KEY is not configured on the server.' });
+    }
+
+    const SYSTEM_PROMPT = `
 Act as a Senior Master Electric Vehicle Technician specializing in high-performance e-bikes and light EVs for Ebike King NJ. Your goal is to provide precise, actionable diagnostic paths for mechanical and electrical failures.
 
 Technical Knowledge Base:
@@ -18,64 +28,55 @@ Diagnostic Protocol:
 Tone: Direct, technical, and "no-nonsense." Avoid introductory fluff. Assume the mechanic has tools (multimeter, phase tester) and knows how to use them.
 `;
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash",
-    systemInstruction: SYSTEM_PROMPT
-});
-
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed' });
-    }
-
-    const { message, image, context, history } = req.body;
-
     try {
-        let activeModel = model;
+        // Build the latest message content
+        const currentMessage = messages[messages.length - 1];
+        const content = [{ type: 'text', text: currentMessage.text || 'Analyze the attached image.' }];
         
-        const chat = activeModel.startChat({
-            history: history || [],
-        });
-
-        // Prepare message parts
-        const parts = [];
-        
-        // Handle context for the first message
-        let textContent = message;
-        if (context && (!history || history.length === 0)) {
-            if (context.type === 'specific') {
-                const specs = context.specs ? 
-                    ` (Specs: ${context.specs.voltage}, Controller: ${context.specs.controller}, Motor: ${context.specs.motorType}, Display: ${context.specs.displayModel})` : 
-                    '';
-                textContent = `The mechanic is working on a specific model: ${context.modelName}${specs}. 
-                1. Please provide the key mechanical and electrical specifications for this bike (or confirm the provided ones).
-                2. Then, address the following issue: ${message || 'Check the attached image for details.'}`;
-            } else {
-                textContent = `Context: Generic Build. Voltage: ${context.voltage}, Controller: ${context.controller || 'Unknown'}, Motor: ${context.motorType || 'Unknown'}, Display: ${context.displayModel || 'None'}. 
-                Issue: ${message || 'Check the attached image for details.'}`;
-            }
-        }
-        
-        parts.push({ text: textContent });
-
-        // Add image part if provided
         if (image) {
-            const [header, data] = image.split(',');
-            const mimeType = header.split(':')[1].split(';')[0];
-            parts.push({
-                inlineData: {
-                    data: data,
-                    mimeType: mimeType
-                }
+            content.push({
+                type: 'image_url',
+                image_url: { url: image }
             });
         }
 
-        const result = await chat.sendMessage(parts);
-        const response = await result.response;
-        res.status(200).json({ text: response.text() });
+        // If it's the first message, inject context
+        if (messages.length === 1) {
+            const contextStr = context.type === 'specific' 
+              ? `Model: ${context.modelName}${context.specs ? ` (${context.specs.voltage}, ${context.specs.controller})` : ''}`
+              : `Custom Build: ${context.voltage}, ${context.controller}, ${context.motorType}`;
+            
+            content[0].text = `Context: ${contextStr}\n\nIssue: ${currentMessage.text || 'Analyze the image.'}`;
+        }
+
+        const history = messages.slice(0, -1).map(m => ({
+            role: m.role,
+            content: m.text
+        }));
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    ...history,
+                    { role: 'user', content }
+                ],
+                max_tokens: 1000
+            })
+        });
+
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
+
+        res.status(200).json({ text: data.choices[0].message.content });
     } catch (error) {
-        console.error("Gemini API Error:", error);
-        res.status(200).json({ text: "DIAGNOSTIC ENGINE ERROR: " + (error.message || "Unknown error. Check API key and model availability.") });
+        console.error('API Error:', error);
+        res.status(500).json({ error: error.message });
     }
 }
