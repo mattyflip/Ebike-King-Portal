@@ -22,6 +22,7 @@
 }
 
 .parts-toggle-btn {
+  border-radius: var(--radius-pill);
   background: var(--bg-panel);
   border: 1px solid var(--neon-cyan);
   color: var(--neon-cyan);
@@ -100,7 +101,7 @@
   background: var(--bg-panel);
   border: 1px solid var(--border-industrial);
   padding: 1.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-cozy);
 }
 
 .part-badge {
@@ -111,7 +112,7 @@
   font-size: 0.6rem;
   font-family: monospace;
   text-transform: uppercase;
-  border-radius: 2px;
+  border-radius: 6px;
   margin-bottom: 0.5rem;
 }
 
@@ -208,6 +209,7 @@
 }
 
 .key-config button {
+  border-radius: 6px;
   background: var(--neon-cyan);
   color: var(--bg-dark);
   border: none;
@@ -221,7 +223,7 @@
   color: var(--neon-green);
   border: 1px solid var(--neon-green);
   padding: 2px 5px;
-  border-radius: 2px;
+  border-radius: 6px;
   margin-left: 10px;
 }
 
@@ -229,7 +231,7 @@
 .setup-container, .chat-container {
   background: var(--bg-panel);
   border: 1px solid var(--border-industrial);
-  border-radius: 4px;
+  border-radius: var(--radius-cozy);
   box-shadow: var(--shadow-neon);
   position: relative;
   overflow: hidden;
@@ -266,6 +268,7 @@
 }
 
 input, select {
+  border-radius: 10px;
   width: 100%;
   padding: 0.8rem 1rem;
   background: var(--bg-input);
@@ -282,6 +285,8 @@ input:focus, select:focus {
 }
 
 .mode-toggle {
+  border-radius: var(--radius-pill);
+  overflow: hidden;
   display: flex;
   gap: 1px;
   background: var(--border-industrial);
@@ -308,6 +313,7 @@ input:focus, select:focus {
 }
 
 .start-btn {
+  border-radius: var(--radius-pill);
   width: 100%;
   padding: 1rem;
   background: var(--neon-cyan);
@@ -355,6 +361,7 @@ input:focus, select:focus {
 }
 
 .message {
+  border-radius: var(--radius-cozy);
   max-width: 85%;
   padding: 1rem 1.2rem;
   font-size: 0.95rem;
@@ -363,6 +370,7 @@ input:focus, select:focus {
 }
 
 .message.user {
+  border-bottom-right-radius: 2px;
   align-self: flex-end;
   background: var(--bg-input);
   border-right: 3px solid var(--neon-cyan);
@@ -370,6 +378,7 @@ input:focus, select:focus {
 }
 
 .message.model {
+  border-bottom-left-radius: 2px;
   align-self: flex-start;
   background: rgba(255, 255, 255, 0.03);
   border-left: 3px solid var(--text-dim);
@@ -404,7 +413,7 @@ input:focus, select:focus {
 /* Image Handling */
 .chat-image {
   max-width: 100%;
-  border-radius: 4px;
+  border-radius: var(--radius-cozy);
   border: 1px solid var(--border-industrial);
   margin-bottom: 1rem;
   display: block;
@@ -427,7 +436,7 @@ input:focus, select:focus {
 .image-preview-container img {
   height: 60px;
   display: block;
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 .remove-img {
@@ -461,6 +470,7 @@ input:focus, select:focus {
 }
 
 .input-area button {
+  border-radius: var(--radius-pill);
   padding: 0 2rem;
   background: var(--neon-cyan);
   color: var(--bg-dark);
@@ -471,6 +481,7 @@ input:focus, select:focus {
 }
 
 .reset-btn {
+  border-radius: var(--radius-pill);
   align-self: center;
   margin-top: 2rem;
   background: transparent;
@@ -508,3 +519,4 @@ input:focus, select:focus {
 .message-content strong {
   color: var(--neon-green);
 }
+

@@ -19,6 +19,8 @@
   --border-industrial: #2d2d35;
   --border-glow: rgba(0, 242, 255, 0.3);
   --shadow-neon: 0 0 15px rgba(0, 242, 255, 0.2);
+  --radius-cozy: 12px;
+  --radius-pill: 50px;
 
   font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   line-height: 1.5;
@@ -77,3 +79,4 @@ h1, h2, h3 {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--neon-cyan);
 }
+
