@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
-  role: 'user' | 'model';
+  role: 'user' | 'assistant';
   text: string;
   image?: string; // Base64
 }
@@ -39,7 +39,6 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
   const [input, setInput] = useState('');
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeModel, setActiveModel] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,34 +54,6 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  // AUTO-DISCOVERY: Find a model that works for this specific API key
-  const findWorkingModel = async () => {
-    try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-      const data = await response.json();
-      
-      if (data.models && Array.isArray(data.models)) {
-        // Find the first model that supports generateContent
-        // We look for 'gemini-1.5-flash' specifically first, then fallback
-        const suitable = data.models.find((m: any) => 
-          m.supportedGenerationMethods.includes('generateContent') && 
-          (m.name.includes('gemini-1.5-flash') || m.name.includes('gemini-2.0-flash'))
-        ) || data.models.find((m: any) => 
-          m.supportedGenerationMethods.includes('generateContent')
-        );
-        
-        if (suitable) {
-          console.log("Auto-discovered model:", suitable.name);
-          return suitable.name;
-        }
-      }
-      return 'models/gemini-pro'; // Last resort
-    } catch (e) {
-      console.error("Discovery failed", e);
-      return 'models/gemini-pro';
-    }
-  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -106,77 +77,58 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
     setLoading(true);
 
     try {
-      // 1. Resolve which model to use
-      let modelToUse = activeModel;
-      if (!modelToUse) {
-        modelToUse = await findWorkingModel();
-        setActiveModel(modelToUse);
+      // Build OpenAI-style content
+      const content: any[] = [{ type: 'text', text: input || 'Please analyze the attached image.' }];
+      
+      if (image) {
+        content.push({
+          type: 'image_url',
+          image_url: { url: image }
+        });
       }
 
-      // 2. Build History for REST API
-      const historyParts = messages.map(m => ({
-        role: m.role === 'user' ? 'user' : 'model',
-        parts: [{ text: m.text }]
+      // First message context
+      const historyMessages = messages.map(m => ({
+        role: m.role,
+        content: m.text
       }));
 
-      // 3. Current message parts
-      const currentParts: any[] = [];
-      let textContent = input;
       if (messages.length === 0) {
         const contextStr = context.type === 'specific' 
           ? `Model: ${context.modelName}${context.specs ? ` (${context.specs.voltage}, ${context.specs.controller})` : ''}`
           : `Custom Build: ${context.voltage}, ${context.controller}, ${context.motorType}`;
-        textContent = `[SYSTEM INSTRUCTION: ${SYSTEM_PROMPT}]\n\nContext: ${contextStr}\n\nIssue: ${input || 'Analyze the image.'}`;
-      }
-      currentParts.push({ text: textContent });
-
-      if (userMessage.image) {
-        const [header, data] = userMessage.image.split(',');
-        const mimeType = header.split(':')[1].split(';')[0];
-        currentParts.push({
-          inlineData: { data, mimeType }
-        });
+        
+        content[0].text = `Context: ${contextStr}\n\nIssue: ${input || 'Analyze the image.'}`;
       }
 
-      // 4. REST API call - try v1beta first
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/${modelToUse}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [...historyParts, { role: 'user', parts: currentParts }]
-          })
-        }
-      );
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            ...historyMessages,
+            { role: 'user', content }
+          ],
+          max_tokens: 1000
+        })
+      });
 
-      let data = await response.json();
-
-      // If v1beta fails with 404, try v1
-      if (data.error && data.error.code === 404) {
-          const v1Response = await fetch(
-            `https://generativelanguage.googleapis.com/v1/${modelToUse}:generateContent?key=${apiKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [...historyParts, { role: 'user', parts: currentParts }]
-              })
-            }
-          );
-          data = await v1Response.json();
-      }
+      const data = await response.json();
 
       if (data.error) throw new Error(data.error.message);
 
-      const modelText = data.candidates[0].content.parts[0].text;
-      const modelMessage: Message = { role: 'model', text: modelText };
-      setMessages((prev) => [...prev, modelMessage]);
+      const modelText = data.choices[0].message.content;
+      setMessages((prev) => [...prev, { role: 'assistant', text: modelText }]);
     } catch (error: any) {
-      console.error('REST API Error:', error);
+      console.error('OpenAI Error:', error);
       setMessages((prev) => [...prev, { 
-        role: 'model', 
-        text: `**DIAGNOSTIC FAILURE:** ${error.message || 'Check your API key and connection.'}` 
+        role: 'assistant', 
+        text: `**DIAGNOSTIC FAILURE:** ${error.message || 'Check your OpenAI API key and balance.'}` 
       }]);
     } finally {
       setLoading(false);
@@ -187,7 +139,7 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
     <div className="chat-container">
       <div className="chat-header">
         <h3>{getHeader()}</h3>
-        <span className="direct-badge">{activeModel ? activeModel.split('/')[1] : 'Discovering AI...'}</span>
+        <span className="direct-badge">GPT-4o Active</span>
       </div>
       <div className="messages-list">
         {messages.length === 0 && (
@@ -196,18 +148,12 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context, apiKey }) => {
           </div>
         )}
         {messages.map((msg, idx) => (
-          <div key={idx} className={`message ${msg.role}`}>
+          <div key={idx} className={`message ${msg.role === 'user' ? 'user' : 'model'}`}>
             <div className="message-content">
               {msg.image && (
                 <img src={msg.image} alt="Diagnostic attachment" className="chat-image" />
               )}
-              {msg.role === 'model' ? (
-                <ReactMarkdown>{msg.text}</ReactMarkdown>
-              ) : (
-                msg.text.split('\n').map((line, i) => (
-                  <p key={i}>{line}</p>
-                ))
-              )}
+              <ReactMarkdown>{msg.text}</ReactMarkdown>
             </div>
           </div>
         ))}

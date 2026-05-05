@@ -176,8 +176,13 @@
 .status-dot {
   width: 6px;
   height: 6px;
-  background: var(--neon-green);
+  background: var(--text-dim);
   border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.status-dot.active {
+  background: var(--neon-green);
   box-shadow: 0 0 5px var(--neon-green);
 }
 
