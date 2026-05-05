@@ -1,22 +1,25 @@
 {
   "short_name": "EK Portal",
   "name": "Ebike King AI Portal",
+  "description": "Professional Diagnostic Tool for Ebike King NJ",
   "icons": [
     {
       "src": "favicon.svg",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
       "src": "favicon.svg",
-      "sizes": "512x512",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
     }
   ],
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
   "theme_color": "#0a0a0c",
-  "background_color": "#0a0a0c"
+  "background_color": "#0a0a0c",
+  "orientation": "portrait"
 }
