@@ -3,6 +3,7 @@ import './App.css';
 import ContextSetup from './components/ContextSetup';
 import DiagnosticChat from './components/DiagnosticChat';
 import PartsDatabase from './components/PartsDatabase';
+import ErrorCodeDatabase from './components/ErrorCodeDatabase';
 
 type DiagnosticContext = 
   | { type: 'specific'; modelName: string; specs?: { voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string } }
@@ -11,6 +12,7 @@ type DiagnosticContext =
 function App() {
   const [context, setContext] = useState<DiagnosticContext | null>(null);
   const [isPartsOpen, setIsPartsOpen] = useState(false);
+  const [isCodesOpen, setIsCodesOpen] = useState(false);
 
   return (
     <div className="app-wrapper">
@@ -20,12 +22,17 @@ function App() {
             <h1>Ebike King NJ</h1>
             <span className="subtitle">Master Tech Diagnostic Portal v2.3</span>
           </div>
-          <button className="parts-toggle-btn" onClick={() => setIsPartsOpen(true)}>
-            📦 Parts DB
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button className="parts-toggle-btn" onClick={() => setIsCodesOpen(true)} style={{ borderColor: 'var(--neon-red)', color: 'var(--neon-red)' }}>
+              ?? Error Codes
+            </button>
+            <button className="parts-toggle-btn" onClick={() => setIsPartsOpen(true)}>
+              ?? Parts DB
+            </button>
+          </div>
         </div>
       </header>
-      
+
       <main className="main-content">
         {!context ? (
           <ContextSetup onComplete={setContext} />
@@ -35,6 +42,7 @@ function App() {
       </main>
 
       <PartsDatabase isOpen={isPartsOpen} onClose={() => setIsPartsOpen(false)} />
+      <ErrorCodeDatabase isOpen={isCodesOpen} onClose={() => setIsCodesOpen(false)} />
 
       {context && (
         <button className="reset-btn" onClick={() => setContext(null)}>
