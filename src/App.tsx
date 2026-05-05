@@ -1,41 +1,149 @@
-import { useState } from 'react';
-import './App.css';
-import ContextSetup from './components/ContextSetup';
-import DiagnosticChat from './components/DiagnosticChat';
-import PartsDatabase from './components/PartsDatabase';
-import ErrorCodeDatabase from './components/ErrorCodeDatabase';
+﻿import { useState, useEffect } from "react";
+import "./App.css";
+import ContextSetup from "./components/ContextSetup";
+import DiagnosticChat from "./components/DiagnosticChat";
+import PartsDatabase from "./components/PartsDatabase";
+import ErrorCodeDatabase from "./components/ErrorCodeDatabase";
+import Login from "./components/Login";
+import { auth } from "./firebase";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
-type DiagnosticContext = 
-  | { type: 'specific'; modelName: string; specs?: { voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string } }
-  | { type: 'custom'; voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string };
+type DiagnosticContext =
+  | {
+      type: "specific";
+      modelName: string;
+      specs?: {
+        voltage: string;
+        controller: string;
+        motorType: string;
+        motorWattage: string;
+        displayModel: string;
+      };
+    }
+  | {
+      type: "custom";
+      voltage: string;
+      controller: string;
+      motorType: string;
+      motorWattage: string;
+      displayModel: string;
+    };
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const [context, setContext] = useState<DiagnosticContext | null>(null);
   const [isPartsOpen, setIsPartsOpen] = useState(false);
   const [isCodesOpen, setIsCodesOpen] = useState(false);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setContext(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          color: "var(--neon-cyan)",
+        }}
+      >
+        Initializing Secure Connection...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
   return (
     <div className="app-wrapper">
-      <div style={{ display: 'flex', gap: '8px', padding: '12px', background: 'rgba(0,0,0,0.5)', borderBottom: '1px solid var(--border-industrial)', position: 'sticky', top: 0, zIndex: 100 }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+          padding: "12px",
+          background: "rgba(0,0,0,0.5)",
+          borderBottom: "1px solid var(--border-industrial)",
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+        }}
+      >
         <button
           onClick={() => setIsCodesOpen(true)}
-          style={{ flex: 1, padding: '10px', background: 'var(--neon-red)', color: '#000', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: '900', fontSize: '0.75rem', cursor: 'pointer' }}
+          style={{
+            flex: 1,
+            padding: "10px",
+            background: "var(--neon-red)",
+            color: "#000",
+            border: "none",
+            borderRadius: "var(--radius-pill)",
+            fontWeight: "900",
+            fontSize: "0.75rem",
+            cursor: "pointer",
+          }}
         >
           ERROR CODES
         </button>
         <button
           onClick={() => setIsPartsOpen(true)}
-          style={{ flex: 1, padding: '10px', background: 'var(--neon-cyan)', color: '#000', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: '900', fontSize: '0.75rem', cursor: 'pointer' }}
+          style={{
+            flex: 1,
+            padding: "10px",
+            background: "var(--neon-cyan)",
+            color: "#000",
+            border: "none",
+            borderRadius: "var(--radius-pill)",
+            fontWeight: "900",
+            fontSize: "0.75rem",
+            cursor: "pointer",
+          }}
         >
           PARTS DB
         </button>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: "10px 20px",
+            background: "transparent",
+            color: "var(--neon-red)",
+            border: "1px solid var(--neon-red)",
+            borderRadius: "var(--radius-pill)",
+            fontWeight: "900",
+            fontSize: "0.75rem",
+            cursor: "pointer",
+          }}
+        >
+          LOGOUT
+        </button>
       </div>
 
-      <header className="main-header" style={{ marginTop: '1rem' }}>
+      <header className="main-header" style={{ marginTop: "1rem" }}>
         <div className="header-flex">
           <div>
             <h1>Ebike King NJ</h1>
             <span className="subtitle">Master Tech Diagnostic Portal v2.4</span>
+          </div>
+          <div style={{ textAlign: "right", color: "var(--text-dim)", fontSize: "0.8rem" }}>
+            Mechanic: {user.email}
           </div>
         </div>
       </header>
@@ -52,7 +160,11 @@ function App() {
       <ErrorCodeDatabase isOpen={isCodesOpen} onClose={() => setIsCodesOpen(false)} />
 
       {context && (
-        <button className="reset-btn" onClick={() => setContext(null)} style={{ margin: '2rem auto', display: 'block' }}>
+        <button
+          className="reset-btn"
+          onClick={() => setContext(null)}
+          style={{ margin: "2rem auto", display: "block" }}
+        >
           New Diagnostic Session
         </button>
       )}
@@ -61,3 +173,4 @@ function App() {
 }
 
 export default App;
+
