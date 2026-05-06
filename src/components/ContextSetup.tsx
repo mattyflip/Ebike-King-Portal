@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { EBIKE_MODELS } from "../models";
 import type { EbikeModel } from "../models";
 import { db, storage } from "../firebase";
@@ -117,7 +117,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
         motorType,
         motorWattage,
         displayModel,
-        imageUrl: "", // Custom unsaved builds don"t have imageUrl passed yet unless saved
+        imageUrl: "", // Custom unsaved builds don"t have imageUrl passed yet unless saved    
       });
     }
   };
@@ -139,13 +139,34 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
             <label>Select Shop Model</label>
             <select onChange={handleLibrarySelect} style={{ marginBottom: "1rem" }}>
               <option value="">-- Choose a standard or saved model --</option>
-              <optgroup label="Shop Models">
-                {EBIKE_MODELS.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
+              
+              <optgroup label="Popular Commuter & Everyday">
+                {EBIKE_MODELS.filter(m => m.category === 'commuter').map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
                 ))}
               </optgroup>
+              
+              <optgroup label="Delivery Models">
+                {EBIKE_MODELS.filter(m => m.category === 'delivery').map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </optgroup>
+              
+              <optgroup label="High-Performance">
+                {EBIKE_MODELS.filter(m => m.category === 'performance').map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </optgroup>
+              
+              {/* Fallback for uncategorized models if any */}
+              {EBIKE_MODELS.some(m => !m.category) && (
+                <optgroup label="Other Standard Models">
+                  {EBIKE_MODELS.filter(m => !m.category).map((m) => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
+                  ))}
+                </optgroup>
+              )}
+
               {savedBikes.length > 0 && (
                 <optgroup label="Mechanic Saved Library">
                   {savedBikes.map((m) => (
@@ -285,4 +306,3 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
 };
 
 export default ContextSetup;
-
