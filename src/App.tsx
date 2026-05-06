@@ -29,6 +29,9 @@ type DiagnosticContext =
       motorType: string;
       motorWattage: string;
       displayModel: string;
+    }
+  | {
+      type: "general";
     };
 
 function App() {

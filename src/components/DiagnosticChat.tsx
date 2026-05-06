@@ -9,7 +9,8 @@ interface Message {
 
 type DiagnosticContext = 
   | { type: 'specific'; modelName: string; specs?: { voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string } }
-  | { type: 'custom'; voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string };
+  | { type: 'custom'; voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string }
+  | { type: 'general' };
 
 interface DiagnosticChatProps {
   context: DiagnosticContext;
@@ -25,7 +26,8 @@ const DiagnosticChat: React.FC<DiagnosticChatProps> = ({ context }) => {
 
   const getHeader = () => {
     if (context.type === 'specific') return context.modelName;
-    return `${context.voltage} | ${context.controller || 'Generic Controller'} | ${context.motorType || 'Generic Motor'}`;
+    if (context.type === 'custom') return `${context.voltage} | ${context.controller || 'Generic Controller'} | ${context.motorType || 'Generic Motor'}`;
+    return "General Tech Support";
   };
 
   const scrollToBottom = () => {

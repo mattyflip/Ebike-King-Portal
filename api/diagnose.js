@@ -39,7 +39,15 @@ Tone: Direct, technical, and "no-nonsense." Assume the mechanic has high-end too
         let userText = currentMessage.text || '';
 
         if (messages.length === 1) {
-            userText = "Context: " + (context.type === 'specific' ? context.modelName : context.voltage) + "\n\nIssue: " + userText;
+            let contextStr = "";
+            if (context.type === 'specific') {
+                contextStr = `Context: ${context.modelName}`;
+            } else if (context.type === 'custom') {
+                contextStr = `Context: ${context.voltage} Custom Build`;
+            } else {
+                contextStr = `Context: General Technical Inquiry`;
+            }
+            userText = `${contextStr}\n\nIssue: ${userText}`;
         }
 
         // Requirement 6: Prepend the system prompt to the user's message as per previous working patterns
