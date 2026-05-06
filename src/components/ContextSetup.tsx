@@ -14,7 +14,6 @@ type DiagnosticContext =
       motorType: string;
       motorWattage: string;
       displayModel: string;
-      batteryCapacity?: string;
       imageUrl?: string;
     }
   | { type: "general" };
@@ -37,23 +36,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
   const [motorType, setMotorType] = useState("");
   const [motorWattage, setMotorWattage] = useState("");
   const [displayModel, setDisplayModel] = useState("");
-  const [batteryAh, setBatteryAh] = useState("");
-  const [batteryWh, setBatteryWh] = useState("");
-  const [capacityMode, setCapacityMode] = useState<"Ah" | "Wh">("Ah");
-
-  // Automatically convert when voltage or capacity changes
-  useEffect(() => {
-    const vNum = parseInt(voltage);
-    if (isNaN(vNum)) return;
-
-    if (capacityMode === "Ah" && batteryAh) {
-      const wh = (vNum * parseFloat(batteryAh)).toFixed(0);
-      setBatteryWh(wh);
-    } else if (capacityMode === "Wh" && batteryWh) {
-      const ah = (parseFloat(batteryWh) / vNum).toFixed(1);
-      setBatteryAh(ah);
-    }
-  }, [voltage, batteryAh, batteryWh, capacityMode]);
 
   useEffect(() => {
     // Real-time listener for Firestore "bikes" collection
@@ -100,11 +82,9 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
         imageUrl = await getDownloadURL(snapshot.ref);
       }
 
-      const batteryCapacity = batteryWh ? `${batteryWh}Wh (${batteryAh}Ah)` : "";
-
       const bikeData = {
         name: modelName,
-        specs: { voltage, controller, motorType, motorWattage, displayModel, batteryCapacity },
+        specs: { voltage, controller, motorType, motorWattage, displayModel },
         imageUrl,
         createdAt: new Date().toISOString(),
       };
@@ -123,8 +103,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const batteryCapacity = batteryWh ? `${batteryWh}Wh (${batteryAh}Ah)` : "";
-    
     if (mode === "specific") {
       onComplete({
         type: "specific",
@@ -140,7 +118,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
         motorType,
         motorWattage,
         displayModel,
-        batteryCapacity,
         imageUrl: "", // Custom unsaved builds don"t have imageUrl passed yet unless saved    
       });
     } else {
@@ -224,7 +201,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
                 <div className="hint" style={{ color: "var(--neon-green)" }}>
                   Tech Specs Loaded: {selectedLibraryModel.specs.voltage} |{" "}
                   {selectedLibraryModel.specs.controller}
-                  {selectedLibraryModel.specs.batteryCapacity && ` | ${selectedLibraryModel.specs.batteryCapacity}`}
                 </div>
                 {selectedLibraryModel.imageUrl && (
                   <img
@@ -266,58 +242,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
                 <option value="Custom">Custom</option>
               </select>
             </div>
-
-            <div className="form-group">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <label>Battery Capacity</label>
-                <div className="mini-toggle" style={{ display: 'flex', gap: '4px' }}>
-                  <button 
-                    type="button"
-                    className={capacityMode === 'Ah' ? 'active' : ''} 
-                    onClick={() => setCapacityMode('Ah')}
-                    style={{ padding: '2px 8px', fontSize: '0.7rem' }}
-                  >Ah</button>
-                  <button 
-                    type="button"
-                    className={capacityMode === 'Wh' ? 'active' : ''} 
-                    onClick={() => setCapacityMode('Wh')}
-                    style={{ padding: '2px 8px', fontSize: '0.7rem' }}
-                  >Wh</button>
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <div style={{ flex: 1 }}>
-                  <input
-                    type="number"
-                    placeholder="Amp Hours (Ah)"
-                    value={batteryAh}
-                    onChange={(e) => {
-                      setCapacityMode('Ah');
-                      setBatteryAh(e.target.value);
-                    }}
-                    style={{ borderColor: capacityMode === 'Ah' ? 'var(--neon-cyan)' : 'transparent' }}
-                  />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <input
-                    type="number"
-                    placeholder="Watt Hours (Wh)"
-                    value={batteryWh}
-                    onChange={(e) => {
-                      setCapacityMode('Wh');
-                      setBatteryWh(e.target.value);
-                    }}
-                    style={{ borderColor: capacityMode === 'Wh' ? 'var(--neon-cyan)' : 'transparent' }}
-                  />
-                </div>
-              </div>
-              {batteryAh && batteryWh && (
-                <div className="hint" style={{ marginTop: '4px', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-                  Auto-calculated: {voltage} x {batteryAh}Ah ≈ {batteryWh}Wh
-                </div>
-              )}
-            </div>
-
             <div className="form-group">
               <label>Controller Type</label>
               <input

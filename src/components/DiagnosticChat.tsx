@@ -8,8 +8,8 @@ interface Message {
 }
 
 type DiagnosticContext = 
-  | { type: 'specific'; modelName: string; specs?: { voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string; batteryCapacity?: string } }
-  | { type: 'custom'; voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string; batteryCapacity?: string }
+  | { type: 'specific'; modelName: string; specs?: { voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string } }
+  | { type: 'custom'; voltage: string; controller: string; motorType: string; motorWattage: string; displayModel: string }
   | { type: 'general' };
 
 interface DiagnosticChatProps {

@@ -42,10 +42,8 @@ Tone: Direct, technical, and "no-nonsense." Assume the mechanic has high-end too
             let contextStr = "";
             if (context.type === 'specific') {
                 contextStr = `Context: ${context.modelName}`;
-                if (context.specs?.batteryCapacity) contextStr += ` (${context.specs.batteryCapacity})`;
             } else if (context.type === 'custom') {
                 contextStr = `Context: ${context.voltage} Custom Build`;
-                if (context.batteryCapacity) contextStr += ` (${context.batteryCapacity})`;
             } else {
                 contextStr = `Context: General Technical Inquiry`;
             }
