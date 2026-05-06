@@ -8,6 +8,7 @@ export interface EbikeModel {
     motorType: string;
     motorWattage: string;
     displayModel: string;
+    batteryCapacity?: string;
   };
 }
 

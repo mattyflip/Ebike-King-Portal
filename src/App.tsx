@@ -20,6 +20,7 @@ type DiagnosticContext =
         motorType: string;
         motorWattage: string;
         displayModel: string;
+        batteryCapacity?: string;
       };
     }
   | {
@@ -29,6 +30,7 @@ type DiagnosticContext =
       motorType: string;
       motorWattage: string;
       displayModel: string;
+      batteryCapacity?: string;
     }
   | {
       type: "general";
