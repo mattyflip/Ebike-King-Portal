@@ -52,8 +52,10 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      setLoading(false); // Move this up so the app shows immediately
+
       if (currentUser) {
-        // Register/Update user in Firestore for admin tracking
+        // Register/Update user in Firestore in the background
         try {
           const isUserAdmin = currentUser.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
           await setDoc(doc(db, "users", currentUser.uid), {
@@ -65,7 +67,6 @@ function App() {
           console.error("Error updating user record:", err);
         }
       }
-      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
