@@ -239,7 +239,7 @@ function App() {
 
       <header className="main-header" style={{ marginTop: "1rem" }}>
         <div className="header-flex" style={{ alignItems: 'center' }}>
-          <Logo height={50} />
+          <Logo height={100} />
           <div style={{ textAlign: "right", color: "var(--text-dim)", fontSize: "0.8rem" }}>
             {isAdmin ? "ADMIN" : "MECHANIC"}: {user?.email}
           </div>

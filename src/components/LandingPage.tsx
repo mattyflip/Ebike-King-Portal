@@ -9,14 +9,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
   return (
     <div className="landing-container" style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0' }}>
-        <Logo height={60} />
+        <Logo height={120} />
         <button className="start-btn" onClick={onLogin} style={{ padding: "0.5rem 1.5rem" }}>
           Login
         </button>
       </nav>
 
       <section className="hero" style={{ textAlign: "center", padding: "6rem 0" }}>
-        <Logo height={180} />
+        <Logo height={300} />
         <h2 style={{ fontSize: "1.5rem", color: "var(--neon-green)", marginTop: "2rem", marginBottom: "2rem" }}>
           The Intelligent Backbone for E-Bike Shops
         </h2>
