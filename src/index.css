@@ -1,11 +1,11 @@
 :root {
-  /* DiagOS Brand Palette */
+  /* DiagOS Brand Palette - Matched to new Logo */
   --bg-dark: #0a0a0c;
   --bg-panel: #141417;
   --bg-input: #1a1a1e;
-
-  --neon-cyan: #00f2ff;
-  --neon-green: #00ff9d;
+  
+  --neon-green: #29f8a4; /* Matched to the vibrant green in the bike logo */
+  --neon-cyan: #29f8a4; /* Using the same brand green for primary actions */
   --neon-amber: #ffaa00;
   --neon-red: #ff0055;
 
@@ -14,8 +14,6 @@
   --text-dim: #64748b;
 
   --border-industrial: #2d2d35;
-  --border-glow: rgba(0, 242, 255, 0.3);
-  --shadow-neon: 0 0 15px rgba(0, 242, 255, 0.2);
   --radius-cozy: 12px;
   --radius-pill: 50px;
 
@@ -28,56 +26,15 @@
   background-color: var(--bg-dark);
 }
 
-/* DiagOS Logo Styles */
-.diagos-logo {
+/* Updated Logo Container Styles */
+.diagos-logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  font-size: 1.5rem;
+  transition: opacity 0.2s;
 }
 
-.logo-icon {
-  width: 36px;
-  height: 36px;
-  background: var(--neon-cyan);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 10px rgba(0, 242, 255, 0.4);
-}
-
-.logo-mark {
-  width: 18px;
-  height: 4px;
-  background: #000;
-  transform: rotate(-45deg);
-  border-radius: 2px;
-  position: relative;
-}
-
-.logo-mark::after {
-  content: '';
-  position: absolute;
-  width: 10px;
-  height: 4px;
-  background: #000;
-  transform: rotate(90deg);
-  left: 4px;
-  top: -4px;
-  border-radius: 2px;
-}
-
-.logo-os {
-  background: var(--neon-cyan);
-  color: #000;
-  padding: 0px 6px;
-  border-radius: 4px;
-  margin-left: 4px;
-  font-size: 0.85rem;
-  vertical-align: middle;
+.diagos-logo-container:hover {
+  opacity: 0.9;
 }
 body {
   margin: 0;

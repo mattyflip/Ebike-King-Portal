@@ -1,14 +1,18 @@
 import React from "react";
+import logoImg from "../assets/logo.png";
 
-const Logo: React.FC<{ scale?: number }> = ({ scale = 1 }) => {
+const Logo: React.FC<{ height?: number }> = ({ height = 40 }) => {
   return (
-    <div className="diagos-logo" style={{ transform: `scale(${scale})`, transformOrigin: 'left' }}>
-      <div className="logo-icon">
-        <div className="logo-mark"></div>
-      </div>
-      <div className="logo-text">
-        DIAG<span className="logo-os">OS</span>
-      </div>
+    <div className="diagos-logo-container" style={{ display: 'inline-flex', alignItems: 'center' }}>
+      <img 
+        src={logoImg} 
+        alt="DiagOS Logo" 
+        style={{ 
+          height: `${height}px`, 
+          width: 'auto',
+          display: 'block'
+        }} 
+      />
     </div>
   );
 };
