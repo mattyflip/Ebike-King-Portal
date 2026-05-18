@@ -129,7 +129,7 @@ function App() {
   }
 
   // View 3: App (Authenticated)
-  const isAdmin = user?.email === ADMIN_EMAIL;
+  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
   return (
     <div className="app-wrapper">
