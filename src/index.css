@@ -4,8 +4,8 @@
   --bg-panel: #141417;
   --bg-input: #1a1a1e;
   
-  --neon-green: #29f8a4; /* Matched to the vibrant green in the bike logo */
-  --neon-cyan: #29f8a4; /* Using the same brand green for primary actions */
+  --neon-green: #01dcff; /* Updated to match Diag OS SVG Cyan */
+  --neon-cyan: #01dcff;
   --neon-amber: #ffaa00;
   --neon-red: #ff0055;
 
