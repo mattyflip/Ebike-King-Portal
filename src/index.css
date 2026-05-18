@@ -4,8 +4,8 @@
   --bg-panel: #141417;
   --bg-input: #1a1a1e;
   
-  --neon-green: #01dcff; /* Updated to match Diag OS SVG Cyan */
-  --neon-cyan: #01dcff;
+  --neon-green: #00d8ff; /* Exactly matched to official Diag OS PNG */
+  --neon-cyan: #00d8ff;
   --neon-amber: #ffaa00;
   --neon-red: #ff0055;
 
