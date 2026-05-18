@@ -116,7 +116,7 @@ export const EBIKE_MODELS: EbikeModel[] = [
   { id: 'addmotor-m-81', name: 'AddMotor M-81 Cargo', category: 'utility', specs: { voltage: '48V', controller: '48V 25A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'LCD Display' } },
   { id: 'huffy-everett', name: 'Huffy Everett+ Eco', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LED Display' } },
   { id: 'kent-torpedo', name: 'Kent Torpedo', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LED Display' } },
-  { id: 'mongoose-envoy', mongoose: 'Mongoose Envoy Electric', category: 'utility', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LCD Display' } },
+  { id: 'mongoose-envoy', name: 'Mongoose Envoy Electric', category: 'utility', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LCD Display' } },
   { id: 'schwinn-marshall', name: 'Schwinn Marshall', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LED Control' } },
   { id: 'vanmoof-s5', name: 'VanMoof S5', category: 'commuter', specs: { voltage: '47V', controller: 'VanMoof Gen 5', motorType: 'Front Hub Motor', motorWattage: '250W (Boost)', displayModel: 'Halo Rings' } },
   { id: 'sondors-smart-step', name: 'Sondors Smart Step', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LCD Display' } },
