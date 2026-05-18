@@ -1,5 +1,5 @@
 import React from "react";
-import logoImg from "../assets/logo.png";
+import logoImg from "../assets/logo.svg";
 
 const Logo: React.FC<{ height?: number }> = ({ height = 40 }) => {
   return (
