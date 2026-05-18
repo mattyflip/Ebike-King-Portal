@@ -1,4 +1,5 @@
 import React from "react";
+import Logo from "./Logo";
 
 interface LandingPageProps {
   onLogin: () => void;
@@ -7,28 +8,39 @@ interface LandingPageProps {
 const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
   return (
     <div className="landing-container" style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <section className="hero" style={{ textAlign: "center", padding: "4rem 0" }}>
-        <h1 style={{ fontSize: "3.5rem", color: "var(--neon-cyan)", marginBottom: "1rem" }}>
-          The AI Master Tech for Your Shop
+      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0' }}>
+        <Logo scale={1.2} />
+        <button className="start-btn" onClick={onLogin} style={{ padding: "0.5rem 1.5rem" }}>
+          Login
+        </button>
+      </nav>
+
+      <section className="hero" style={{ textAlign: "center", padding: "6rem 0" }}>
+        <h1 style={{ fontSize: "4.5rem", color: "var(--neon-cyan)", marginBottom: "1rem", lineHeight: 1 }}>
+          DIAG<span style={{ color: "var(--text-primary)" }}>OS</span>
         </h1>
-        <p style={{ fontSize: "1.2rem", color: "var(--text-dim)", maxWidth: "800px", margin: "0 auto 2rem" }}>
-          Stop guessing. Start fixing. The world's most advanced AI diagnostic portal for high-performance 
-          E-Bikes, Sur-Rons, Talarias, and Custom Builds.
+        <h2 style={{ fontSize: "1.5rem", color: "var(--neon-green)", marginBottom: "2rem" }}>
+          The Intelligent Backbone for E-Bike Shops
+        </h2>
+        <p style={{ fontSize: "1.2rem", color: "var(--text-dim)", maxWidth: "700px", margin: "0 auto 3rem" }}>
+          A high-performance diagnostic ecosystem for Sur-Ron, Talaria, Onyx, and beyond. 
+          Powered by specialized AI trained on thousands of hours of master-tech repair data.
         </p>
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
-          <button className="start-btn" onClick={onLogin} style={{ padding: "1rem 2rem", fontSize: "1.1rem" }}>
-            Launch Portal
+          <button className="start-btn" onClick={onLogin} style={{ padding: "1.2rem 2.5rem", fontSize: "1.1rem" }}>
+            Get Started
           </button>
           <button style={{ 
-            padding: "1rem 2rem", 
+            padding: "1.2rem 2.5rem", 
             fontSize: "1.1rem", 
             background: "transparent", 
-            border: "1px solid var(--neon-cyan)", 
-            color: "var(--neon-cyan)",
+            border: "1px solid var(--border-industrial)", 
+            color: "var(--text-primary)",
             borderRadius: "var(--radius-md)",
-            cursor: "pointer"
+            cursor: "pointer",
+            fontWeight: "bold"
           }}>
-            View Pricing
+            Explore Docs
           </button>
         </div>
       </section>

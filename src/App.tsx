@@ -12,7 +12,11 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import type { User } from "firebase/auth";
 import { onSnapshot, doc, setDoc, serverTimestamp } from "firebase/firestore";
 
+import Logo from "./components/Logo";
+
 const ADMIN_EMAIL = "MattyFlipTV@gmail.com";
+
+// ... (rest of imports and types)
 
 type DiagnosticContext =
   | {
@@ -233,16 +237,14 @@ function App() {
       </div>
 
       <header className="main-header" style={{ marginTop: "1rem" }}>
-        <div className="header-flex">
-          <div>
-            <h1>Ebike King NJ</h1>
-            <span className="subtitle">
-              {isAdminView ? "Admin Operations Control" : "Master Tech Diagnostic Portal v2.6"}
-            </span>
-          </div>
+        <div className="header-flex" style={{ alignItems: 'center' }}>
+          <Logo scale={1.2} />
           <div style={{ textAlign: "right", color: "var(--text-dim)", fontSize: "0.8rem" }}>
             {isAdmin ? "ADMIN" : "MECHANIC"}: {user?.email}
           </div>
+        </div>
+        <div style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 'bold' }}>
+          {isAdminView ? "ADMIN OPERATIONS CONTROL" : "SYSTEM DIAGNOSTICS READY"}
         </div>
       </header>
 
