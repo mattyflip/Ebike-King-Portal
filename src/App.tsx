@@ -51,10 +51,11 @@ function App() {
       if (currentUser) {
         // Register/Update user in Firestore for admin tracking
         try {
+          const isUserAdmin = currentUser.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
           await setDoc(doc(db, "users", currentUser.uid), {
             email: currentUser.email,
             lastLogin: serverTimestamp(),
-            role: currentUser.email === ADMIN_EMAIL ? "admin" : "mechanic"
+            role: isUserAdmin ? "admin" : "mechanic"
           }, { merge: true });
         } catch (err) {
           console.error("Error updating user record:", err);
