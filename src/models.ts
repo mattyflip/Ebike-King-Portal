@@ -1,7 +1,7 @@
 export interface EbikeModel {
   id: string;
   name: string;
-  category?: 'commuter' | 'performance' | 'delivery' | 'utility';
+  category?: 'commuter' | 'performance' | 'delivery' | 'utility' | 'off-road';
   specs: {
     voltage: string;
     controller: string;
@@ -12,297 +12,124 @@ export interface EbikeModel {
 }
 
 export const EBIKE_MODELS: EbikeModel[] = [
-  // --- COMMUTER & EVERYDAY ---
-  {
-    id: 'aventon-level-2',
-    name: 'Aventon Level.2',
-    category: 'commuter',
-    specs: {
-      voltage: '48V',
-      controller: '48V 20A Brushless',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '500W (750W Peak)',
-      displayModel: 'BC-280 Full Color LCD'
-    }
-  },
-  {
-    id: 'velotric-discover-1',
-    name: 'Velotric Discover 1',
-    category: 'commuter',
-    specs: {
-      voltage: '48V',
-      controller: '48V Brushless',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '500W (900W Peak)',
-      displayModel: '3.5" Backlit LCD'
-    }
-  },
-  {
-    id: 'ride1up-700-series',
-    name: 'Ride1Up 700 Series',
-    category: 'commuter',
-    specs: {
-      voltage: '48V',
-      controller: '48V 22A Sine Wave',
-      motorType: 'Geared Hub Motor',
-      motorWattage: '750W',
-      displayModel: 'KD218 Color LCD'
-    }
-  },
-  {
-    id: 'vanpowers-city-vanture',
-    name: 'Vanpowers City Vanture',
-    category: 'commuter',
-    specs: {
-      voltage: '36V',
-      controller: '36V Brushless',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '350W',
-      displayModel: 'Integrated OLED'
-    }
-  },
-  {
-    id: 'electra-townie-go-7d',
-    name: 'Electra Townie Go! 7D',
-    category: 'commuter',
-    specs: {
-      voltage: '36V',
-      controller: 'Hyena System',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '250W (40Nm)',
-      displayModel: 'LED Controller'
-    }
-  },
-  {
-    id: 'rad-radrunner-2',
-    name: 'Rad Power Bikes RadRunner 2',
-    category: 'commuter',
-    specs: {
-      voltage: '48V',
-      controller: '48V 15A Rad Custom',
-      motorType: 'Geared Hub Motor',
-      motorWattage: '750W',
-      displayModel: 'Rad LED Display'
-    }
-  },
-  {
-    id: 'lectric-xp-3',
-    name: 'Lectric XP 3.0',
-    category: 'commuter',
-    specs: {
-      voltage: '48V',
-      controller: '48V Brushless',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '500W (1000W Peak)',
-      displayModel: 'M5 LCD Display'
-    }
-  },
-
-  // --- PERFORMANCE & MOPED ---
-  {
-    id: 'ride1up-revv-1',
-    name: 'Ride1Up Revv 1',
-    category: 'performance',
-    specs: {
-      voltage: '52V',
-      controller: '52V 28A-35A Sine Wave',
-      motorType: 'Bafang Hub Motor',
-      motorWattage: '750W (Nominal) / 1500W (Peak)',
-      displayModel: 'Center Color LCD'
-    }
-  },
-  {
-    id: 'super73-s2',
-    name: 'Super73 S2',
-    category: 'performance',
-    specs: {
-      voltage: '48V',
-      controller: '48V Peak-Performance',
-      motorType: 'Brushless DC Hub Motor',
-      motorWattage: '750W (Nominal) / 2000W (Peak)',
-      displayModel: 'Super73 Smart App / LCD'
-    }
-  },
-  {
-    id: 'goat-motor-goat-v3',
-    name: 'Goat Power Motor Goat V3',
-    category: 'performance',
-    specs: {
-      voltage: '60V',
-      controller: '60V 35A Sine Wave',
-      motorType: 'High-Torque Hub Motor',
-      motorWattage: '1000W (Nom) / 1500W+ (Peak)',
-      displayModel: 'Full Color LCD'
-    }
-  },
-  {
-    id: 'macfox-x2',
-    name: 'Macfox X2',
-    category: 'performance',
-    specs: {
-      voltage: '48V',
-      controller: '48V Brushless',
-      motorType: 'Geared Hub Motor',
-      motorWattage: '750W (1000W Peak)',
-      displayModel: 'Backlit LCD'
-    }
-  },
-  {
-    id: 'macfox-x1',
-    name: 'Macfox X1 / X1S',
-    category: 'performance',
-    specs: {
-      voltage: '48V',
-      controller: '48V Brushless',
-      motorType: 'Geared Hub Motor',
-      motorWattage: '500W (750W Peak)',
-      displayModel: 'Backlit LCD'
-    }
-  },
-  {
-    id: 'ridstar-q20-pro',
-    name: 'Ridstar Q20 Pro',
-    category: 'performance',
-    specs: {
-      voltage: '52V',
-      controller: 'Dual 52V Controllers',
-      motorType: 'Dual Hub Motors',
-      motorWattage: '2000W (Total)',
-      displayModel: 'SW900 Advanced LCD'
-    }
-  },
-  {
-    id: 'bigniu-72v-pro',
-    name: 'Bigniu 72V High-Power',
-    category: 'performance',
-    specs: {
-      voltage: '72V',
-      controller: '72V 45A-60A Brushless',
-      motorType: 'Large Hub Motor',
-      motorWattage: '2000W - 3000W',
-      displayModel: 'Digital Motorcycle-style LCD'
-    }
-  },
-  {
-    id: 'onyx-rcr',
-    name: 'Onyx RCR',
-    category: 'performance',
-    specs: {
-      voltage: '72V',
-      controller: 'Kelly KLS7230S',
-      motorType: 'Hub Motor (QS Motors)',
-      motorWattage: '3000W (Peak 13kW+)',
-      displayModel: 'Onyx Standard'
-    }
-  },
-  {
-    id: 'surron-x',
-    name: 'Sur-Ron Light Bee X',
-    category: 'performance',
-    specs: {
-      voltage: '60V',
-      controller: 'X-Version Sine Wave',
-      motorType: 'Mid-Drive BLDC',
-      motorWattage: '6000W Peak',
-      displayModel: 'Sur-Ron Digital'
-    }
-  },
-  {
-    id: 'talaria-sting',
-    name: 'Talaria Sting R (MX4)',
-    category: 'performance',
-    specs: {
-      voltage: '60V',
-      controller: 'Sting Factory Sine Wave',
-      motorType: 'IPM Mid-Drive',
-      motorWattage: '8000W Peak',
-      displayModel: 'Talaria OLED'
-    }
-  },
-
-  // --- DELIVERY & UTILITY ---
-  {
-    id: 'arrow-10',
-    name: 'Arrow 10 (Delivery)',
-    category: 'delivery',
-    specs: {
-      voltage: '48V',
-      controller: '48V 22A KT-style',
-      motorType: 'High Speed Hub Motor',
-      motorWattage: '500W',
-      displayModel: 'SW900 LCD'
-    }
-  },
-  {
-    id: 'fly-7',
-    name: 'Fly-7 (Delivery)',
-    category: 'delivery',
-    specs: {
-      voltage: '48V',
-      controller: '48V 22A Fly Custom',
-      motorType: 'Hub Motor',
-      motorWattage: '750W',
-      displayModel: 'LCD Digital'
-    }
-  },
-  {
-    id: 'senada-herald',
-    name: 'Senada Herald',
-    category: 'delivery',
-    specs: {
-      voltage: '48V',
-      controller: '48V 22A Brushless',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '1000W Peak / 750W Sus',
-      displayModel: 'M5 LCD Display'
-    }
-  },
-  {
-    id: 'sondors-madmod',
-    name: 'Sondors MadMod',
-    category: 'delivery',
-    specs: {
-      voltage: '48V',
-      controller: '48V Brushless',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '750W',
-      displayModel: 'Integrated Color LCD'
-    }
-  },
-  {
-    id: 'bob-ebike-ph',
-    name: 'BOB E-Trike (Passenger)',
-    category: 'delivery',
-    specs: {
-      voltage: '48V/60V',
-      controller: 'Differential Brushless',
-      motorType: 'Differential Hub Motor',
-      motorWattage: '500W - 800W',
-      displayModel: 'Digital Dash'
-    }
-  },
-  {
-    id: 'velotric-nomad-1',
-    name: 'Velotric Nomad 1',
-    category: 'delivery',
-    specs: {
-      voltage: '48V',
-      controller: '48V Brushless',
-      motorType: 'Rear Hub Motor',
-      motorWattage: '750W (1200W Peak)',
-      displayModel: '3.5" Backlit LCD'
-    }
-  },
-  {
-    id: 'tern-gsd-s10',
-    name: 'Tern GSD S10',
-    category: 'delivery',
-    specs: {
-      voltage: '36V',
-      controller: 'Bosch Cargo Line',
-      motorType: 'Bosch Mid-Drive',
-      motorWattage: '250W (85Nm Torque)',
-      displayModel: 'Bosch Purion'
-    }
-  }
+  // --- PERFORMANCE & MOPED-STYLE (THE CORE MARKET) ---
+  { id: 'surron-light-bee-x', name: 'Sur-Ron Light Bee X', category: 'performance', specs: { voltage: '60V', controller: 'X-Version Sine Wave', motorType: 'Mid-Drive BLDC', motorWattage: '6000W Peak', displayModel: 'Sur-Ron Digital' } },
+  { id: 'surron-ultra-bee', name: 'Sur-Ron Ultra Bee', category: 'performance', specs: { voltage: '74V', controller: 'Ultra Sine Wave', motorType: 'Mid-Drive BLDC', motorWattage: '12.5kW Peak', displayModel: 'Ultra LCD' } },
+  { id: 'talaria-sting-r-mx4', name: 'Talaria Sting R (MX4)', category: 'performance', specs: { voltage: '60V', controller: 'Sting Factory Sine Wave', motorType: 'IPM Mid-Drive', motorWattage: '8000W Peak', displayModel: 'Talaria OLED' } },
+  { id: 'talaria-dragon', name: 'Talaria Dragon', category: 'performance', specs: { voltage: '88V', controller: 'High-Voltage Dragon', motorType: 'Mid-Drive BLDC', motorWattage: '25kW Peak', displayModel: 'TFT Touchscreen' } },
+  { id: 'onyx-rcr-72v', name: 'Onyx RCR (72V)', category: 'performance', specs: { voltage: '72V', controller: 'Kelly KLS7230S', motorType: 'Hub Motor (QS Motors)', motorWattage: '3000W (13kW Peak)', displayModel: 'Standard Analog-style' } },
+  { id: 'super73-r-adventure', name: 'Super73 R-Adventure', category: 'performance', specs: { voltage: '48V', controller: 'Super73 custom', motorType: 'Rear Hub Motor', motorWattage: '750W (2000W Peak)', displayModel: 'Smart App / LCD' } },
+  { id: 'super73-s2', name: 'Super73 S2', category: 'performance', specs: { voltage: '48V', controller: 'Super73 Peak-Performance', motorType: 'Rear Hub Motor', motorWattage: '750W (1200W Peak)', displayModel: 'Super73 Smart' } },
+  { id: 'super73-zx', name: 'Super73 ZX', category: 'performance', specs: { voltage: '48V', controller: 'Super73 custom', motorType: 'Rear Hub Motor', motorWattage: '750W (1350W Peak)', displayModel: 'Super73 Smart' } },
+  { id: 'ariel-rider-grizzly', name: 'Ariel Rider Grizzly', category: 'performance', specs: { voltage: '52V Dual', controller: 'Dual 52V 35A', motorType: 'Dual Hub Motors', motorWattage: '2000W Nominal (3000W+ Peak)', displayModel: 'Color LCD' } },
+  { id: 'ariel-rider-kepler', name: 'Ariel Rider Kepler', category: 'performance', specs: { voltage: '52V', controller: '52V 33A', motorType: 'Rear Hub Motor', motorWattage: '1000W (1800W Peak)', displayModel: 'Color LCD' } },
+  { id: 'goat-v3', name: 'Goat Power Motor Goat V3', category: 'performance', specs: { voltage: '60V', controller: '60V 35A Sine Wave', motorType: 'High-Torque Hub', motorWattage: '1000W (1500W+ Peak)', displayModel: 'Full Color LCD' } },
+  { id: 'wired-freedom', name: 'Wired Freedom', category: 'performance', specs: { voltage: '60V', controller: '60V 40A Sine Wave', motorType: 'High-Torque Rear Hub', motorWattage: '1000W (2500W Peak)', displayModel: 'SW900-style Color' } },
+  
+  // --- AMAZON & BUDGET BRANDS ---
+  { id: 'macfox-x1', name: 'Macfox X1 / X1S', category: 'performance', specs: { voltage: '48V', controller: '48V Brushless', motorType: 'Rear Hub Motor', motorWattage: '500W (750W Peak)', displayModel: 'Backlit LCD' } },
+  { id: 'macfox-x2', name: 'Macfox X2', category: 'performance', specs: { voltage: '48V', controller: '48V Brushless', motorType: 'High-Speed Geared Hub', motorWattage: '750W (1000W Peak)', displayModel: 'Backlit LCD' } },
+  { id: 'ridstar-q20', name: 'Ridstar Q20 Pro', category: 'performance', specs: { voltage: '52V', controller: 'Dual 52V Controllers', motorType: 'Dual Hub Motors', motorWattage: '2000W Total', displayModel: 'SW900 Advanced' } },
+  { id: 'happyrun-g50', name: 'Happyrun G50', category: 'performance', specs: { voltage: '48V', controller: '48V Brushless', motorType: 'Rear Hub Motor', motorWattage: '750W (1500W Peak)', displayModel: 'S866 LCD' } },
+  { id: 'ridingtimes-z8', name: 'Ridingtimes Z8', category: 'performance', specs: { voltage: '48V', controller: '48V Brushless', motorType: 'Rear Hub Motor', motorWattage: '750W (1000W Peak)', displayModel: 'Backlit LCD' } },
+  { id: 'tuttio-m1', name: 'Tuttio M1', category: 'commuter', specs: { voltage: '48V', controller: '48V 18A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Color Display' } },
+  { id: 'meelod-dk200', name: 'Meelod DK200', category: 'performance', specs: { voltage: '48V', controller: 'Dual 48V', motorType: 'Dual Hub Motors', motorWattage: '1500W Total', displayModel: 'LCD Digital' } },
+  { id: 'jasion-eb7', name: 'Jasion EB7 Special', category: 'commuter', specs: { voltage: '48V', controller: '48V 15A', motorType: 'Rear Hub Motor', motorWattage: '500W (850W Peak)', displayModel: 'LCD Display' } },
+  { id: 'ancheer-pro-26', name: 'Ancheer Pro 26', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LED Control' } },
+  { id: 'jetson-bolt-pro', name: 'Jetson Bolt Pro', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LED Battery Bar' } },
+  { id: 'swagtron-eb5', name: 'Swagtron EB5 Pro', category: 'commuter', specs: { voltage: '36V', controller: '36V 15A', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'N/A (Throttle LED)' } },
+  { id: 'engwe-engine-pro', name: 'Engwe Engine Pro 2.0', category: 'performance', specs: { voltage: '48V', controller: '48V 18A Sine Wave', motorType: 'Rear Hub Motor', motorWattage: '750W (1200W Peak)', displayModel: 'Full Color LCD' } },
+  { id: 'heybike-mars', name: 'Heybike Mars 2.0', category: 'commuter', specs: { voltage: '48V', controller: '48V 15A', motorType: 'Rear Hub Motor', motorWattage: '500W (1000W Peak)', displayModel: 'Backlit LCD' } },
+  
+  // --- MARKET LEADERS ---
+  { id: 'aventon-level-2', name: 'Aventon Level.2', category: 'commuter', specs: { voltage: '48V', controller: '48V 20A Brushless', motorType: 'Rear Hub Motor', motorWattage: '500W (750W Peak)', displayModel: 'BC-280 Full Color' } },
+  { id: 'aventon-aventure-2', name: 'Aventon Aventure.2', category: 'off-road', specs: { voltage: '48V', controller: '48V Brushless', motorType: 'Rear Hub Motor', motorWattage: '750W (1100W Peak)', displayModel: 'Full Color LCD' } },
+  { id: 'aventon-abound', name: 'Aventon Abound (Cargo)', category: 'utility', specs: { voltage: '48V', controller: '48V 25A', motorType: 'Rear Hub Motor', motorWattage: '750W (Torque Sensor)', displayModel: 'Full Color LCD' } },
+  { id: 'lectric-xp-3', name: 'Lectric XP 3.0', category: 'commuter', specs: { voltage: '48V', controller: '48V 20A', motorType: 'Rear Hub Motor', motorWattage: '500W (1000W Peak)', displayModel: 'M5 LCD' } },
+  { id: 'lectric-xpedition', name: 'Lectric XPedition', category: 'utility', specs: { voltage: '48V Dual', controller: '48V 25A Dual Capable', motorType: 'Rear Hub Motor', motorWattage: '750W (1310W Peak)', displayModel: 'Color LCD' } },
+  { id: 'rad-radrunner-3', name: 'Rad Power Bikes RadRunner 3 Plus', category: 'utility', specs: { voltage: '48V', controller: '48V Rad Custom', motorType: 'Geared Hub Motor', motorWattage: '750W', displayModel: 'Rad Color Display' } },
+  { id: 'rad-radwagon-4', name: 'Rad Power Bikes RadWagon 4', category: 'utility', specs: { voltage: '48V', controller: '48V 22A Rad Custom', motorType: 'Geared Hub Motor', motorWattage: '750W', displayModel: 'Rad LCD' } },
+  { id: 'velotric-discover-2', name: 'Velotric Discover 2', category: 'commuter', specs: { voltage: '48V', controller: '48V 22A', motorType: 'Rear Hub Motor', motorWattage: '750W (1100W Peak)', displayModel: '3.5" Color LCD' } },
+  { id: 'velotric-nomad-1', name: 'Velotric Nomad 1', category: 'off-road', specs: { voltage: '48V', controller: '48V 20A', motorType: 'Rear Hub Motor', motorWattage: '750W (1200W Peak)', displayModel: '3.5" Backlit LCD' } },
+  { id: 'himiway-zebra', name: 'Himiway Zebra', category: 'off-road', specs: { voltage: '48V', controller: '48V 22A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'LCD Display' } },
+  
+  // --- PREMIUM & GLOBAL GIANTS ---
+  { id: 'trek-allant-plus', name: 'Trek Allant+ 8S', category: 'commuter', specs: { voltage: '36V', controller: 'Bosch Performance Line Speed', motorType: 'Bosch Mid-Drive', motorWattage: '250W (85Nm)', displayModel: 'Bosch Kiox' } },
+  { id: 'specialized-vado-sl', name: 'Specialized Turbo Vado SL 2', category: 'commuter', specs: { voltage: '48V', controller: 'Specialized 1.2 SL', motorType: 'Specialized Mid-Drive', motorWattage: '250W', displayModel: 'MasterMind TCU' } },
+  { id: 'giant-trance-e', name: 'Giant Trance X E+', category: 'off-road', specs: { voltage: '36V', controller: 'Giant SyncDrive Pro', motorType: 'Yamaha Mid-Drive', motorWattage: '250W (85Nm)', displayModel: 'RideControl Ergo' } },
+  { id: 'cannondale-moterra', name: 'Cannondale Moterra Neo', category: 'off-road', specs: { voltage: '36V', controller: 'Bosch Performance CX', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Purion' } },
+  { id: 'gazelle-ultimate', name: 'Gazelle Ultimate C380', category: 'commuter', specs: { voltage: '36V', controller: 'Bosch Performance Line', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Enviolo Automatiq' } },
+  { id: 'tern-gsd', name: 'Tern GSD S10', category: 'utility', specs: { voltage: '36V', controller: 'Bosch Cargo Line', motorType: 'Bosch Mid-Drive', motorWattage: '250W (85Nm)', displayModel: 'Bosch Purion' } },
+  { id: 'stromer-st7', name: 'Stromer ST7', category: 'commuter', specs: { voltage: '48V', controller: 'Stromer custom', motorType: 'Rear Hub Motor (Synno)', motorWattage: '750W (52Nm)', displayModel: 'Stromer OMNI C' } },
+  { id: 'riese-muller-load', name: 'Riese & Müller Load 75', category: 'utility', specs: { voltage: '36V Dual', controller: 'Bosch Cargo Line', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Intuvia' } },
+  
+  // --- ADDITIONAL 50+ MODELS TO REACH 100+ ---
+  { id: 'vanpowers-city', name: 'Vanpowers City Vanture', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'Integrated OLED' } },
+  { id: 'amflow-pl-pro', name: 'Amflow PL Carbon Pro', category: 'off-road', specs: { voltage: '48V', controller: 'DJI Avinox System', motorType: 'DJI Mid-Drive', motorWattage: '250W (105Nm)', displayModel: 'DJI TFT Touch' } },
+  { id: 'mokwheel-basalt', name: 'Mokwheel Basalt', category: 'off-road', specs: { voltage: '48V', controller: '48V 20A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Color LCD' } },
+  { id: 'hovsco-hovalpa', name: 'Hovsco HovAlpha', category: 'off-road', specs: { voltage: '48V', controller: '48V 20A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Full Color LCD' } },
+  { id: 'blix-packa', name: 'Blix Packa Genie', category: 'utility', specs: { voltage: '48V Dual', controller: '48V 25A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Backlit LCD' } },
+  { id: 'propella-7s', name: 'Propella 7S', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LCD Display' } },
+  { id: 'biktrix-juggernaut', name: 'Biktrix Juggernaut Classic', category: 'off-road', specs: { voltage: '52V', controller: '52V 30A', motorType: 'Bafang BBSHD Mid-Drive', motorWattage: '1000W', displayModel: 'Color LCD' } },
+  { id: 'e-cells-monarch', name: 'E-Cells Super Monarch', category: 'off-road', specs: { voltage: '52V Dual', controller: 'Dual 52V 25A', motorType: 'Dual Hub Motors', motorWattage: '1500W Total', displayModel: 'Color LCD' } },
+  { id: 'csc-ft1000md', name: 'CSC FT1000MD', category: 'off-road', specs: { voltage: '48V', controller: '48V Bafang Ultra', motorType: 'Bafang M620 Mid-Drive', motorWattage: '1000W (160Nm)', displayModel: 'Color LCD' } },
+  { id: 'juiced-ripcurrent', name: 'Juiced RipCurrent S', category: 'off-road', specs: { voltage: '52V', controller: '52V 25A', motorType: 'Rear Hub Motor', motorWattage: '1000W', displayModel: 'Advanced LCD' } },
+  { id: 'juiced-hyperscorpion', name: 'Juiced HyperScorpion', category: 'performance', specs: { voltage: '52V', controller: '52V 35A', motorType: 'Retroblade Hub Motor', motorWattage: '1000W (1800W Peak)', displayModel: 'Advanced LCD' } },
+  { id: 'addmotor-m-550', name: 'AddMotor M-550 P7', category: 'off-road', specs: { voltage: '48V', controller: '48V 25A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: '5" LCD' } },
+  { id: 'heybike-tyson', name: 'Heybike Tyson', category: 'commuter', specs: { voltage: '48V', controller: '48V 20A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'TFT Display' } },
+  { id: 'engwe-ep2', name: 'Engwe EP-2 Pro', category: 'commuter', specs: { voltage: '48V', controller: '48V 15A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'LCD Display' } },
+  { id: 'rad-radrover-6', name: 'Rad Power Bikes RadRover 6 Plus', category: 'off-road', specs: { voltage: '48V', controller: '48V Rad Custom', motorType: 'Geared Hub Motor', motorWattage: '750W', displayModel: 'Rad UI' } },
+  { id: 'lectric-one', name: 'Lectric ONE', category: 'commuter', specs: { voltage: '48V', controller: '48V Pinion SmartShift', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Color LCD' } },
+  { id: 'senada-herald', name: 'Senada Herald', category: 'delivery', specs: { voltage: '48V', controller: '48V 22A', motorType: 'Rear Hub Motor', motorWattage: '1000W Peak', displayModel: 'M5 LCD' } },
+  { id: 'sondors-madmod', name: 'Sondors MadMod', category: 'delivery', specs: { voltage: '48V', controller: '48V Brushless', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Integrated LCD' } },
+  { id: 'retrospec-koala', name: 'Retrospec Koala Rev', category: 'commuter', specs: { voltage: '48V', controller: '48V 15A', motorType: 'Rear Hub Motor', motorWattage: '500W', displayModel: 'Backlit LCD' } },
+  { id: 'segway-x260', name: 'Segway X260', category: 'performance', specs: { voltage: '60V', controller: 'X-Version Sine Wave', motorType: 'Mid-Drive BLDC', motorWattage: '5000W Peak', displayModel: 'Digital Dash' } },
+  { id: 'fly-7-delivery', name: 'Fly-7 (Delivery)', category: 'delivery', specs: { voltage: '48V', controller: '48V 22A', motorType: 'High Speed Hub', motorWattage: '750W', displayModel: 'LCD Digital' } },
+  { id: 'arrow-10-delivery', name: 'Arrow 10 (Delivery)', category: 'delivery', specs: { voltage: '48V', controller: '48V 22A KT-style', motorType: 'High Speed Hub', motorWattage: '500W', displayModel: 'SW900 LCD' } },
+  { id: 'vvolt-sirius', name: 'Vvolt Sirius', category: 'commuter', specs: { voltage: '36V', controller: 'MPF Drive System', motorType: 'Mid-Drive', motorWattage: '250W (80Nm)', displayModel: 'Integrated LCD' } },
+  { id: 'ride1up-roadster', name: 'Ride1Up Roadster V2', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'Compact LCD' } },
+  { id: 'blix-sol-ace', name: 'Blix Sol Ace', category: 'commuter', specs: { voltage: '48V', controller: '48V 18A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Backlit LCD' } },
+  { id: 'pedego-interceptor', name: 'Pedego Interceptor', category: 'commuter', specs: { voltage: '48V', controller: '48V 22A', motorType: 'Rear Hub Motor', motorWattage: '500W', displayModel: 'LCD Display' } },
+  { id: 'bakcou-mule', name: 'Bakcou Mule', category: 'off-road', specs: { voltage: '48V', controller: 'Bafang Ultra', motorType: 'Mid-Drive', motorWattage: '1000W', displayModel: 'Color LCD' } },
+  { id: 'quietkat-apex', name: 'QuietKat Apex', category: 'off-road', specs: { voltage: '48V', controller: 'Bafang Mid-Drive', motorType: 'Mid-Drive', motorWattage: '1000W', displayModel: 'Color LCD' } },
+  { id: 'evelo-omega', name: 'EVELO Omega', category: 'commuter', specs: { voltage: '48V', controller: 'Dapu Mid-Drive', motorType: 'Mid-Drive', motorWattage: '750W (Enviolo)', displayModel: 'Color LCD' } },
+  { id: 'benno-boost', name: 'Benno Boost E', category: 'utility', specs: { voltage: '36V', controller: 'Bosch Performance CX', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Purion' } },
+  { id: 'yuba-spicy-curry', name: 'Yuba Spicy Curry', category: 'utility', specs: { voltage: '36V', controller: 'Bosch Cargo Line', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Kiox' } },
+  { id: 'kalkhoff-entice', name: 'Kalkhoff Entice 5', category: 'off-road', specs: { voltage: '36V', controller: 'Bosch Performance CX', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Intuvia' } },
+  { id: 'cannondale-adventure', name: 'Cannondale Adventure Neo', category: 'commuter', specs: { voltage: '36V', controller: 'Bosch Active Line Plus', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Purion' } },
+  { id: 'giant-explore', name: 'Giant Explore E+', category: 'commuter', specs: { voltage: '36V', controller: 'Giant SyncDrive Sport', motorType: 'Yamaha Mid-Drive', motorWattage: '250W', displayModel: 'RideControl Dash' } },
+  { id: 'trek-charter', name: 'Trek Charter+', category: 'utility', specs: { voltage: '36V', controller: 'Bosch Cargo Line', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Intuvia' } },
+  { id: 'specialized-levo', name: 'Specialized Turbo Levo Gen 3', category: 'off-road', specs: { voltage: '36V', controller: 'Specialized 2.2', motorType: 'Brose Mid-Drive', motorWattage: '250W (90Nm)', displayModel: 'MasterMind TCU' } },
+  { id: 'orbea-rise', name: 'Orbea Rise', category: 'off-road', specs: { voltage: '36V', controller: 'Shimano EP801-RS', motorType: 'Shimano Mid-Drive', motorWattage: '250W', displayModel: 'Shimano EN600' } },
+  { id: 'cube-stereo', name: 'Cube Stereo Hybrid 140', category: 'off-road', specs: { voltage: '36V', controller: 'Bosch Performance CX', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Kiox 300' } },
+  { id: 'canyon-grizl-on', name: 'Canyon Grizl:ON', category: 'off-road', specs: { voltage: '36V', controller: 'Bosch Performance SX', motorType: 'Bosch Mid-Drive', motorWattage: '250W (55Nm)', displayModel: 'Bosch Mini Remote' } },
+  { id: 'yamaha-moro-07', name: 'Yamaha Moro 07', category: 'off-road', specs: { voltage: '36V', controller: 'Yamaha PW-X3', motorType: 'Yamaha Mid-Drive', motorWattage: '250W (85Nm)', displayModel: 'Interface X' } },
+  { id: 'pinarello-nytro', name: 'Pinarello Nytro E9', category: 'commuter', specs: { voltage: '36V', controller: 'TQ-HPR50', motorType: 'TQ Mid-Drive', motorWattage: '250W (50Nm)', displayModel: 'Integrated OLED' } },
+  { id: 'urban-arrow-family', name: 'Urban Arrow Family', category: 'utility', specs: { voltage: '36V', controller: 'Bosch Cargo Line', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Intuvia' } },
+  { id: 'swagtron-eb7', name: 'Swagtron EB7 Elite', category: 'commuter', specs: { voltage: '36V', controller: '36V 15A', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'Backlit LCD' } },
+  { id: 'ancheer-sunshine', name: 'Ancheer Sunshine', category: 'commuter', specs: { voltage: '36V', controller: '36V 15A', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LED Display' } },
+  { id: 'jasion-eb5', name: 'Jasion EB5 Roamer', category: 'commuter', specs: { voltage: '36V', controller: '36V 15A', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LCD Display' } },
+  { id: 'vivy-fold', name: 'Vivy Folding 20"', category: 'commuter', specs: { voltage: '36V', controller: '36V 12A', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LED Control' } },
+  { id: 'tst-fat-tire', name: 'TST 1500W Fat Tire', category: 'off-road', specs: { voltage: '48V', controller: '48V 30A', motorType: 'Rear Hub Motor', motorWattage: '1000W (1500W Peak)', displayModel: 'Color LCD' } },
+  { id: 'leoguar-l1', name: 'Leoguar L1', category: 'commuter', specs: { voltage: '48V', controller: '48V 15A', motorType: 'Rear Hub Motor', motorWattage: '500W', displayModel: 'LCD Display' } },
+  { id: 'freesky-himalaya', name: 'FREESKY Himalaya', category: 'off-road', specs: { voltage: '48V', controller: '48V 25A', motorType: 'Rear Hub Motor', motorWattage: '750W (1000W Peak)', displayModel: 'Color LCD' } },
+  { id: 'addmotor-m-81', name: 'AddMotor M-81 Cargo', category: 'utility', specs: { voltage: '48V', controller: '48V 25A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'LCD Display' } },
+  { id: 'huffy-everett', name: 'Huffy Everett+ Eco', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LED Display' } },
+  { id: 'kent-torpedo', name: 'Kent Torpedo', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LED Display' } },
+  { id: 'mongoose-envoy', mongoose: 'Mongoose Envoy Electric', category: 'utility', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LCD Display' } },
+  { id: 'schwinn-marshall', name: 'Schwinn Marshall', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'LED Control' } },
+  { id: 'vanmoof-s5', name: 'VanMoof S5', category: 'commuter', specs: { voltage: '47V', controller: 'VanMoof Gen 5', motorType: 'Front Hub Motor', motorWattage: '250W (Boost)', displayModel: 'Halo Rings' } },
+  { id: 'sondors-smart-step', name: 'Sondors Smart Step', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LCD Display' } },
+  { id: 'batch-step-thru', name: 'Batch Step-Thru E-Bike', category: 'commuter', specs: { voltage: '36V', controller: 'Bosch Active Line', motorType: 'Bosch Mid-Drive', motorWattage: '250W', displayModel: 'Bosch Purion' } },
+  { id: 'cytronex-conversion', name: 'Cytronex C1', category: 'commuter', specs: { voltage: '36V', controller: 'Cytronex custom', motorType: 'Front Hub Motor', motorWattage: '250W', displayModel: 'LED Button' } },
+  { id: 'gocycle-g4', name: 'Gocycle G4', category: 'commuter', specs: { voltage: '36V', controller: 'Gocycle custom', motorType: 'Front Hub Motor', motorWattage: '250W (G4drive)', displayModel: 'LED Dash' } },
+  { id: 'italjet-ascoli', name: 'Italjet Ascoli', category: 'commuter', specs: { voltage: '36V', controller: 'Italjet custom', motorType: 'Rear Hub Motor', motorWattage: '250W', displayModel: 'Retro Analog' } },
+  { id: 'e-lux-tahoe', name: 'E-Lux Tahoe GT', category: 'commuter', specs: { voltage: '48V', controller: '48V 22A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'LCD Display' } },
+  { id: 'euphree-stellar', name: 'Euphree Stellar Falcon', category: 'commuter', specs: { voltage: '48V', controller: '48V 18A', motorType: 'Rear Hub Motor', motorWattage: '500W (900W Peak)', displayModel: 'Color LCD' } },
+  { id: 'boogie-cruiser', name: 'Boogie Cruiser', category: 'commuter', specs: { voltage: '48V', controller: '48V 22A', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'LCD Display' } },
+  { id: 'bolton-lancer', name: 'Bolton Lancer', category: 'off-road', specs: { voltage: '48V', controller: '48V 30A', motorType: 'Bafang BBSHD', motorWattage: '1000W', displayModel: 'Color LCD' } },
+  { id: 'crew-dart', name: 'Crew Dart', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Rear Hub Motor', motorWattage: '350W', displayModel: 'LCD Display' } },
+  { id: 'vinfast-drgon', name: 'VinFast DrgonS', category: 'performance', specs: { voltage: '48V', controller: 'VinFast custom', motorType: 'Rear Hub Motor', motorWattage: '750W', displayModel: 'Full Color LCD' } },
+  { id: 'revelo-flex', name: 'Revelo LIFT-Pro', category: 'commuter', specs: { voltage: '36V', controller: '36V Brushless', motorType: 'Front Hub Motor', motorWattage: '250W', displayModel: 'Compact LCD' } },
+  { id: 'sinch-fold', name: 'Aventon Sinch.2', category: 'commuter', specs: { voltage: '48V', controller: '48V 20A Brushless', motorType: 'Rear Hub Motor', motorWattage: '500W (Torque Sensor)', displayModel: 'Color LCD' } }
 ];

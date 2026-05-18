@@ -28,6 +28,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
   const [savedBikes, setSavedBikes] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Custom build states
   const [voltage, setVoltage] = useState("48V");
@@ -50,7 +51,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
       },
       (error) => {
         console.error("Error listening to bikes collection:", error);
-        alert("Real-time sync error: " + error.message);
       }
     );
 
@@ -69,6 +69,10 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
       setModelName("");
     }
   };
+
+  const filteredModels = [...EBIKE_MODELS, ...savedBikes].filter(m => 
+    m.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSaveBike = async () => {
     if (!modelName) return alert("Please enter a model name first.");
@@ -117,7 +121,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
         motorType,
         motorWattage,
         displayModel,
-        imageUrl: "", // Custom unsaved builds don"t have imageUrl passed yet unless saved    
+        imageUrl: "", // Custom unsaved builds don't have imageUrl passed yet unless saved    
       });
     }
   };
@@ -136,36 +140,41 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
       <form onSubmit={handleSubmit}>
         {mode === "specific" ? (
           <div className="form-group">
-            <label>Select Shop Model</label>
-            <select onChange={handleLibrarySelect} style={{ marginBottom: "1rem" }}>
-              <option value="">-- Choose a standard or saved model --</option>
-              
-              <optgroup label="Popular Commuter & Everyday">
-                {EBIKE_MODELS.filter(m => m.category === 'commuter').map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
-                ))}
-              </optgroup>
-              
-              <optgroup label="Delivery Models">
-                {EBIKE_MODELS.filter(m => m.category === 'delivery').map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
-                ))}
-              </optgroup>
+            <label>Search & Select Model ({EBIKE_MODELS.length} Available)</label>
+            <input 
+              type="text" 
+              placeholder="Search by brand or model (e.g. Macfox, Trek, Sur-Ron)..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ marginBottom: '1rem', border: '1px solid var(--neon-cyan)', background: 'rgba(0,0,0,0.2)' }}
+            />
+            
+            <select onChange={handleLibrarySelect} style={{ marginBottom: "1rem" }} value={selectedLibraryModel?.id || selectedLibraryModel?.name || ""}>
+              <option value="">-- Choose from standard or saved --</option>
               
               <optgroup label="High-Performance">
-                {EBIKE_MODELS.filter(m => m.category === 'performance').map((m) => (
+                {filteredModels.filter(m => m.category === 'performance').map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </optgroup>
+
+              <optgroup label="Off-Road & Hunting">
+                {filteredModels.filter(m => m.category === 'off-road').map((m) => (
                   <option key={m.id} value={m.id}>{m.name}</option>
                 ))}
               </optgroup>
               
-              {/* Fallback for uncategorized models if any */}
-              {EBIKE_MODELS.some(m => !m.category) && (
-                <optgroup label="Other Standard Models">
-                  {EBIKE_MODELS.filter(m => !m.category).map((m) => (
-                    <option key={m.id} value={m.id}>{m.name}</option>
-                  ))}
-                </optgroup>
-              )}
+              <optgroup label="Popular Commuter">
+                {filteredModels.filter(m => m.category === 'commuter').map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </optgroup>
+              
+              <optgroup label="Cargo & Utility">
+                {filteredModels.filter(m => m.category === 'delivery' || m.category === 'utility').map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </optgroup>
 
               {savedBikes.length > 0 && (
                 <optgroup label="Mechanic Saved Library">
