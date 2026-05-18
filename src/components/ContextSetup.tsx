@@ -15,15 +15,14 @@ type DiagnosticContext =
       motorWattage: string;
       displayModel: string;
       imageUrl?: string;
-    }
-  | { type: "general" };
+    };
 
 interface ContextSetupProps {
   onComplete: (context: DiagnosticContext) => void;
 }
 
 const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
-  const [mode, setMode] = useState<"specific" | "custom" | "general">("specific");
+  const [mode, setMode] = useState<"specific" | "custom">("specific");
   const [modelName, setModelName] = useState("");
   const [selectedLibraryModel, setSelectedLibraryModel] = useState<any>(null);
   const [savedBikes, setSavedBikes] = useState<any[]>([]);
@@ -110,7 +109,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
         specs: selectedLibraryModel?.specs,
         imageUrl: selectedLibraryModel?.imageUrl,
       });
-    } else if (mode === "custom") {
+    } else {
       onComplete({
         type: "custom",
         voltage,
@@ -120,8 +119,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
         displayModel,
         imageUrl: "", // Custom unsaved builds don"t have imageUrl passed yet unless saved    
       });
-    } else {
-      onComplete({ type: "general" });
     }
   };
 
@@ -133,9 +130,6 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
         </button>
         <button className={mode === "custom" ? "active" : ""} onClick={() => setMode("custom")}>
           Custom Build
-        </button>
-        <button className={mode === "general" ? "active" : ""} onClick={() => setMode("general")}>
-          General Question
         </button>
       </div>
 
@@ -219,7 +213,7 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
               </div>
             )}
           </div>
-        ) : mode === "custom" ? (
+        ) : (
           <>
             <div className="form-group">
               <label>Model / Brand Name</label>
@@ -302,15 +296,9 @@ const ContextSetup: React.FC<ContextSetupProps> = ({ onComplete }) => {
               {isSaving ? "Saving..." : "Save to Mechanic Library"}
             </button>
           </>
-        ) : (
-          <div className="form-group">
-            <p style={{ color: "var(--text-dim)", fontSize: "0.9rem", marginBottom: "1rem" }}>
-              Skip bike selection to ask general questions about electrical systems, components, or diagnostic procedures.
-            </p>
-          </div>
         )}
         <button type="submit" className="start-btn">
-          {mode === "general" ? "Start General Session" : "Initialize Diagnostic Path"}
+          Initialize Diagnostic Path
         </button>
       </form>
     </div>
